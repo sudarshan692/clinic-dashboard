@@ -1,11 +1,7 @@
 // Import necessary dependencies from React and React Router
 import React from 'react';
 import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
-
-// Import AuthProvider and useAuth hook from the custom AuthProvider component
 import { AuthProvider, useAuth } from '../src/components/shared/AuthProvider';
-
-// Import components for login, dashboard, and modal
 import Login from './components/Login/Login';
 import Dashboard from './components/Dashboard/Dashboard';
 import Modal from 'react-modal';
@@ -17,12 +13,10 @@ Modal.setAppElement('#root');
 const PrivateRoute = ({ component: Component, ...rest }) => {
   // Access the authentication context using the useAuth hook
   const authContext = useAuth();
-
   // If still loading user information, return a loading indicator
   if (authContext.loading) {
     return null;
   }
-
   // Render the route based on user authentication status
   return (
     <Route
@@ -38,12 +32,10 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
 const PublicRoute = ({ component: Component, restricted, ...rest }) => {
   // Access the authentication context using the useAuth hook
   const authContext = useAuth();
-
   // If still loading user information, return a loading indicator
   if (authContext.loading) {
     return null;
   }
-
   // Render the route based on user authentication status and restriction
   return (
     <Route
