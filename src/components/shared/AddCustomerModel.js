@@ -1,9 +1,5 @@
-
-// Import necessary dependencies from React and external libraries
 import React, { useState, useEffect } from 'react';
 import Modal from 'react-modal';
-
-// Import the 'db' instance from the shared Firebase module
 import { db } from './firebase'; // Assuming you have a 'db' instance from Firebase
 
 // Functional component for the Add Customer Modal
@@ -30,7 +26,6 @@ const AddCustomerModal = ({ isOpen, onRequestClose, isMobileUnique, setIsMobileU
           .orderBy('customerID', 'desc')
           .limit(1)
           .get();
-
         // Update the customerData state with the next customer ID
         if (!snapshot.empty) {
           const maxCustomerID = snapshot.docs[0].data().customerID;
@@ -49,10 +44,10 @@ const AddCustomerModal = ({ isOpen, onRequestClose, isMobileUnique, setIsMobileU
         console.error('Error fetching max customer ID:', error.message);
       }
     };
-
     // Call the fetchMaxCustomerID function when the modal is opened
     fetchMaxCustomerID();
   }, [isOpen]);
+
 
   // Event handler for input changes in the form
   const handleInputChange = (e) => {
@@ -63,15 +58,17 @@ const AddCustomerModal = ({ isOpen, onRequestClose, isMobileUnique, setIsMobileU
     }));
   };
 
+
   // Custom styles for the modal
   const customStyles = {
     content: {
       width: '50%', // Set the desired width
-      height: '50%', // Set the desired height
+      height: '70%', // Set the desired height
       margin: 'auto', // Center the modal horizontally
       overflow: 'auto', // Allow scrolling if content overflows
     },
   };
+
 
   // Function to check the uniqueness of a mobile number in the 'customers' collection
   const checkMobileNumberUnique = async (mobileNumber) => {
@@ -80,7 +77,6 @@ const AddCustomerModal = ({ isOpen, onRequestClose, isMobileUnique, setIsMobileU
         .collection('customers')
         .where('mobile', '==', mobileNumber)
         .get();
-
       // Return true if no matching documents found (mobile number is unique)
       return snapshot.empty;
     } catch (error) {
@@ -88,6 +84,7 @@ const AddCustomerModal = ({ isOpen, onRequestClose, isMobileUnique, setIsMobileU
       return false;
     }
   };
+
 
   // Function to handle saving customer data to the 'customers' collection
   const handleSave = async () => {
@@ -101,7 +98,17 @@ const AddCustomerModal = ({ isOpen, onRequestClose, isMobileUnique, setIsMobileU
           // Include other customer data here
           ...customerData,
         });
-
+        // Clear input boxes after successful save
+        setCustomerData({
+          customerID: '',
+          name: '',
+          mobile: '',
+          place: '',
+          address: '',
+          age: '',
+          totalCost: '',
+          startDate: '',
+        });
         // Close the modal after successful save
         onRequestClose();
       } else {
@@ -113,12 +120,13 @@ const AddCustomerModal = ({ isOpen, onRequestClose, isMobileUnique, setIsMobileU
     }
   };
   
+
   return (
     <Modal
       isOpen={isOpen}
       onRequestClose={onRequestClose}
       contentLabel="Add Customer Modal"
-      style={{ ...customStyles, overlay: { zIndex: 1000 } }} // Apply the custom styles
+      style={customStyles} // Apply the custom styles
     >
       <h2>Add Customer</h2>
       <div>

@@ -1,111 +1,113 @@
-// Import necessary dependencies from React and external libraries
-import React from 'react';
-import { useTable, useSortBy, usePagination } from 'react-table';
+import React, { useState  } from "react";
+import DataTable from "react-data-table-component";
+import './customerTable.css';
 
-// Functional component for displaying a table of customer data
-const CustomerTable = ({ data, onDelete }) => {
-  // Define the columns for the table using React.useMemo
-  const columns = React.useMemo(
-    () => [
-      {Header: 'Customer ID',accessor: 'customerID'},
-      {Header: 'Name',accessor: 'name'},
-      {Header: 'Mobile Number',accessor: 'mobile'},
-      {Header: 'Place',accessor: 'place'},
-      {Header: 'Age',accessor: 'age'},
-      {Header: 'Total Cost',accessor: 'totalCost'},
-      {Header: 'Start Date',accessor: 'startDate'},
-      {
-        Header: 'Actions',
-        accessor: 'actions',
-        // Custom Cell component for the Actions column, with a delete button
-        Cell: ({ row }) => (
-          <button onClick={() => onDelete(row.original.uniqueID)}>Delete</button>
-        ),
-      },
-    ],
-    [onDelete]
+const CustomerTable = ({ data, onDelete, onEdit }) => {
+  const [searchText, setSearchText] = useState('');
+
+
+  const handleSearch = (e) => {
+    setSearchText(e.target.value);
+  };
+
+  const filteredData = data.filter((item) =>
+    Object.values(item).some(
+      (value) =>
+        value && value.toString().toLowerCase().includes(searchText.toLowerCase())
+    )
   );
 
-  // Use react-table hooks to set up table functionality
-  const {
-    getTableProps,
-    getTableBodyProps,
-    headerGroups,
-    prepareRow,
-    page,
-    nextPage,
-    canNextPage,
-    previousPage,
-    canPreviousPage,
-    state: { pageIndex },
-  } = useTable(
+  const columns = [
+    { name: "Customer ID", selector: (row) => row.customerID, sortable: true },
+    { name: "Name",  selector: (row) => row.name, sortable: true },
+    { name: "Mobile Number", selector: (row) => row.mobile, sortable: true },
+    { name: "Place", selector: (row) => row.place, sortable: true },
+    { name: "Age", selector: (row) => row.age, sortable: true },
+    { name: "Total Cost", selector: (row) => row.totalCost, sortable: true },
+    { name: "Start Date", selector: (row) => row.startDate, sortable: true },
+    { name: "Address", selector: (row) => row.address, sortable: true },
     {
-      columns,
-      data,
+      name: "",
+      cell: (row) => (
+        <>
+          <span
+            className="material-icons"
+            style={{ cursor: "pointer" }}
+            onClick={() => onEdit(row)}
+          >
+            edit
+          </span>
+          <span
+            className="material-icons"
+            style={{ cursor: "pointer" }}
+            onClick={() => onDelete(row.uniqueID)}
+    
+          >
+            delete
+          </span>
+        </>
+      ),
     },
-    useSortBy,
-    usePagination
-  );
-
-  // JSX for rendering the CustomerTable component
+  ];
+  // Define custom styles for the DataTable component
+  const customStyles = {
+    headRow: {
+      style: {
+        backgroundColor: "#3f51b5", // Header background color
+        color: "white", // Header text color
+      },
+    },
+    rows: {
+      style: {
+        "&:nth-child(odd)": {
+          backgroundColor: "#e0e0e0",
+        },
+        "&:nth-child(even)": {
+          backgroundColor: "#f2f2f2",
+        },
+      },
+    },
+    pagination: {
+      style: {
+        backgroundColor: "#ecf0f1", // Pagination background color
+        color: "#34495e", // Pagination text color
+      },
+    },
+    button: {
+      style: {
+        backgroundColor: "#3498db", // Button background color
+        color: "white", // Button text color
+      },
+    },
+  };
+  
   return (
     <div>
-      {/* Table element with props from react-table */}
-      <table {...getTableProps()} className="customer-table">
-        <thead>
-          {/* Map over headerGroups to render the table headers */}
-          {headerGroups.map((headerGroup) => (
-            <tr {...headerGroup.getHeaderGroupProps()}>
-              {headerGroup.headers.map((column) => (
-                // Render each column header with sorting functionality
-                <th {...column.getHeaderProps(column.getSortByToggleProps())}>
-                  {column.render('Header')}
-                  {/* Display sorting indicators */}
-                  <span>
-                    {column.isSorted ? (column.isSortedDesc ? ' 🔽' : ' 🔼') : ''}
-                  </span>
-                </th>
-              ))}
-            </tr>
-          ))}
-        </thead>
-        <tbody {...getTableBodyProps()}>
-          {/* Map over the rows in the current page and render each row */}
-          {page.map((row) => {
-            prepareRow(row);
-            return (
-              <tr {...row.getRowProps()}>
-                {/* Map over cells in each row and render the cell content */}
-                {row.cells.map((cell) => (
-                  <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
-                ))}
-                <td>
-                  {/* Additional cell for actions, which includes the delete button */}
-                </td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
-      {/* Pagination controls */}
-      <div className="pagination">
-        <button onClick={() => previousPage()} disabled={!canPreviousPage}>
-          Previous
-        </button>
-        <span>
-          Page{' '}
-          {/* Display current page and total pages */}
-          <strong>
-            {pageIndex + 1} of {Math.ceil(data.length / 10)}
-          </strong>{' '}
-        </span>
-        <button onClick={() => nextPage()} disabled={!canNextPage}>
-          Next
-        </button>
+      <div className="search-container">
+        <input
+        className="search-input"
+          type="text"
+          value={searchText}
+          onChange={handleSearch}
+          placeholder="Search..."
+        />
+      </div>
+      <div className="table">
+        <DataTable
+          columns={columns}
+          data={filteredData}
+          pagination
+          paginationPerPage={10}
+          paginationRowsPerPageOptions={[10, 20, 30]}
+          highlightOnHover
+          pointerOnHover
+          sortIcon={<i className="material-icons">arrow_upward</i>}
+          defaultSortField="customerID"
+          customStyles={customStyles}
+        />
       </div>
     </div>
   );
 };
 
-// Export the CustomerTable component as the default export for the module
 export default CustomerTable;

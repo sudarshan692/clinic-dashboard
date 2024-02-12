@@ -1,26 +1,19 @@
-// Import necessary dependencies from React and external libraries
-import React, { useState, useEffect } from 'react';
-import { auth, db } from '../shared/firebase';
-import { useHistory } from 'react-router-dom';
-
-// Import LoadingSpinner component for displaying a loading indicator
-import LoadingSpinner from '../shared/LoadingSpinner';
-
-// Import AddCustomerModal and CustomerTable components
-import AddCustomerModal from '../shared/AddCustomerModel';
-import CustomerTable from '../CustomerTable/CustomerTable';
+import React, { useState, useEffect } from "react";
+import { auth, db } from "../shared/firebase";
+import { useHistory } from "react-router-dom";
+import LoadingSpinner from "../shared/LoadingSpinner";
+import AddCustomerModal from "../shared/AddCustomerModel";
+import CustomerTable from "../CustomerTable/CustomerTable";
+import EditCustomerModal from "../shared/EditCustomerModal";
 
 // Functional component for the Dashboard page
 const Dashboard = () => {
-  // Initialize history hook for programmatic navigation
   const history = useHistory();
-
-  // State variables for loading indicator, customer data, and modal status
   const [loading, setLoading] = useState(false);
   const [customers, setCustomers] = useState([]);
   const [isAddCustomerModalOpen, setIsAddCustomerModalOpen] = useState(false);
-
-  // State variable for checking mobile number uniqueness during customer addition
+  const [isEditCustomerModalOpen, setIsEditCustomerModalOpen] = useState(false);
+  const [editCustomerData, setEditCustomerData] = useState(null);
   const [isMobileUnique, setIsMobileUnique] = useState(true);
 
   // Function to fetch customer data from the Firestore database
@@ -28,7 +21,7 @@ const Dashboard = () => {
     try {
       setLoading(true);
       // Retrieve customer data from the 'customers' collection
-      const snapshot = await db.collection('customers').get();
+      const snapshot = await db.collection("customers").get();
       // Map Firestore documents to an array of customer objects with unique IDs
       const customerData = snapshot.docs.map((doc) => ({
         uniqueID: doc.id,
@@ -37,7 +30,7 @@ const Dashboard = () => {
       // Set the customer data state with the retrieved data
       setCustomers(customerData);
     } catch (error) {
-      console.error('Error fetching customers:', error.message);
+      console.error("Error fetching customers:", error.message);
     } finally {
       setLoading(false);
     }
@@ -56,11 +49,11 @@ const Dashboard = () => {
       await auth.signOut();
       // Redirect to the login page after a short delay (1 second)
       setTimeout(() => {
-        history.push('/login');
+        history.push("/login");
       }, 1000);
-      console.log('Logout successful');
+      console.log("Logout successful");
     } catch (error) {
-      console.error('Error logging out:', error.message);
+      console.error("Error logging out:", error.message);
     } finally {
       setLoading(false);
     }
@@ -74,11 +67,25 @@ const Dashboard = () => {
   // Function to handle the deletion of a customer
   const handleDelete = (uniqueID) => {
     // Show alert for confirmation
-    const userConfirmed = window.confirm('Are you sure you want to delete this customer?');
+    const userConfirmed = window.confirm(
+      "Are you sure you want to delete this customer?"
+    );
     // If user confirmed, proceed with deletion
     if (userConfirmed) {
       deleteCustomer(uniqueID); // Pass uniqueID to the deleteCustomer function
     }
+  };
+
+  // Function to open the Edit Customer modal and set the current customer data
+  const openEditCustomerModal = (customerData) => {
+    setIsEditCustomerModalOpen(true);
+    setEditCustomerData(customerData);
+  };
+
+  // Function to close the Edit Customer modal
+  const closeEditCustomerModal = () => {
+    setIsEditCustomerModalOpen(false);
+    setEditCustomerData(null);
   };
 
   // Function to delete a customer from the database
@@ -88,14 +95,14 @@ const Dashboard = () => {
       // Check if the uniqueID is not empty or undefined
       if (uniqueID) {
         // Remove the customer from the database using the Firestore document ID
-        await db.collection('customers').doc(uniqueID).delete();
+        await db.collection("customers").doc(uniqueID).delete();
         // Refetch the updated customer list
         fetchCustomers();
       } else {
-        console.error('Error deleting customer: Invalid document ID');
+        console.error("Error deleting customer: Invalid document ID");
       }
     } catch (error) {
-      console.error('Error deleting customer:', error.message);
+      console.error("Error deleting customer:", error.message);
     } finally {
       setLoading(false);
     }
@@ -107,29 +114,50 @@ const Dashboard = () => {
     setIsAddCustomerModalOpen(false);
   };
 
+  // Function to handle the edit action
+  const onEdit = (customerData) => {
+    // Logic for handling the edit action
+    console.log("Edit button clicked for:", customerData);
+    openEditCustomerModal(customerData);
+  };
+
   // JSX for rendering the Dashboard component
   return (
     <div>
-      <h2>Dashboard</h2>
+      <h1 className="heading">Welcome to Piles Clinic Dashboard</h1>
       <button onClick={openAddCustomerModal}>Add Customer</button>
       <button onClick={handleLogout}>Logout</button>
-      {/* Display loading spinner if data is being fetched */}
       {loading ? (
-        <LoadingSpinner />
+        <div className="overlay">
+          <LoadingSpinner />
+        </div>
       ) : (
         // Display the CustomerTable component with customer data and onDelete function
-        <CustomerTable data={customers} onDelete={handleDelete} />
+        <CustomerTable
+          data={customers}
+          onDelete={handleDelete}
+          onEdit={onEdit}
+        />
       )}
-      {/* Render the AddCustomerModal component with appropriate props */}
       <AddCustomerModal
         isOpen={isAddCustomerModalOpen}
         onRequestClose={closeAddCustomerModal}
         isMobileUnique={isMobileUnique}
         setIsMobileUnique={setIsMobileUnique}
       />
+      <EditCustomerModal
+        isOpen={isEditCustomerModalOpen}
+        onRequestClose={closeEditCustomerModal}
+        initialData={editCustomerData}
+        isMobileUnique={isMobileUnique}
+        setIsMobileUnique={setIsMobileUnique}
+        onEditSuccess={() => {
+          closeEditCustomerModal();
+          fetchCustomers();
+        }}
+      />
     </div>
   );
 };
 
-// Export the Dashboard component as the default export for the module
 export default Dashboard;

@@ -1,0 +1,40 @@
+/* Add this style to make the sort icon visible on hover */
+th:hover .sort-icon {
+    opacity: 0.5;
+    height: 1px;
+  }
+  
+  /* Updated styles for the sort icon */
+  .sort-icon {
+    opacity: 0; /* Initially hidden */
+    transition: opacity 0.3s ease;
+
+  }
+  
+  .sort-icon.visible {
+    opacity: 0.5; /* Visible when not hidden */
+    
+  }
+  .table{
+    margin-left: 10px;
+    margin-right: 10px;
+    
+  }
+
+.search-container {
+  display: flex;
+  justify-content: flex-end;
+  margin-right: 10px;
+
+}
+.search-input {
+  padding: 10px;
+  border: 1px solid #3f51b5;
+  border-radius: 4px;
+  width: 300px;
+  margin-bottom: 10px;
+}
+.material-icons{
+  margin-left: 20px;
+  color: #3f51b5;
+}
