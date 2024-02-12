@@ -18,7 +18,8 @@ th:hover .sort-icon {
   .table{
     margin-left: 10px;
     margin-right: 10px;
-    
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
   }
 
 .search-container {
@@ -33,6 +34,7 @@ th:hover .sort-icon {
   border-radius: 4px;
   width: 300px;
   margin-bottom: 10px;
+  margin-top: -10px;
 }
 .material-icons{
   margin-left: 20px;

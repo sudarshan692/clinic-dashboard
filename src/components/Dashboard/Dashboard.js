@@ -5,7 +5,7 @@ import LoadingSpinner from "../shared/LoadingSpinner";
 import AddCustomerModal from "../shared/AddCustomerModel";
 import CustomerTable from "../CustomerTable/CustomerTable";
 import EditCustomerModal from "../shared/EditCustomerModal";
-
+import './dashboard.css'
 // Functional component for the Dashboard page
 const Dashboard = () => {
   const history = useHistory();
@@ -121,43 +121,40 @@ const Dashboard = () => {
     openEditCustomerModal(customerData);
   };
 
-  // JSX for rendering the Dashboard component
-  return (
-    <div>
-      <h1 className="heading">Welcome to Piles Clinic Dashboard</h1>
-      <button onClick={openAddCustomerModal}>Add Customer</button>
-      <button onClick={handleLogout}>Logout</button>
-      {loading ? (
-        <div className="overlay">
-          <LoadingSpinner />
-        </div>
-      ) : (
-        // Display the CustomerTable component with customer data and onDelete function
-        <CustomerTable
-          data={customers}
-          onDelete={handleDelete}
-          onEdit={onEdit}
-        />
-      )}
-      <AddCustomerModal
-        isOpen={isAddCustomerModalOpen}
-        onRequestClose={closeAddCustomerModal}
-        isMobileUnique={isMobileUnique}
-        setIsMobileUnique={setIsMobileUnique}
-      />
-      <EditCustomerModal
-        isOpen={isEditCustomerModalOpen}
-        onRequestClose={closeEditCustomerModal}
-        initialData={editCustomerData}
-        isMobileUnique={isMobileUnique}
-        setIsMobileUnique={setIsMobileUnique}
-        onEditSuccess={() => {
-          closeEditCustomerModal();
-          fetchCustomers();
-        }}
-      />
-    </div>
-  );
+ // JSX for rendering the Dashboard component
+return (
+  <div className="container">
+    <h1 className="heading">Welcome to Piles Clinic Dashboard</h1>
+    <button className="logout-btn" onClick={handleLogout}>Logout</button>
+    {loading ? (
+      <div className="overlay">
+        <LoadingSpinner />
+      </div>
+    ) : (
+      // Display the CustomerTable component with customer data and onDelete function
+      <CustomerTable data={customers} onDelete={handleDelete} onEdit={onEdit} />
+    )}
+    <button className="add-customer-btn" onClick={openAddCustomerModal}>Add Customer</button>
+    <AddCustomerModal
+      isOpen={isAddCustomerModalOpen}
+      onRequestClose={closeAddCustomerModal}
+      isMobileUnique={isMobileUnique}
+      setIsMobileUnique={setIsMobileUnique}
+    />
+    <EditCustomerModal
+      isOpen={isEditCustomerModalOpen}
+      onRequestClose={closeEditCustomerModal}
+      initialData={editCustomerData}
+      isMobileUnique={isMobileUnique}
+      setIsMobileUnique={setIsMobileUnique}
+      onEditSuccess={() => {
+        closeEditCustomerModal();
+        fetchCustomers();
+      }}
+    />
+  </div>
+);
+
 };
 
 export default Dashboard;

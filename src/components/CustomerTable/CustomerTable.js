@@ -55,6 +55,8 @@ const CustomerTable = ({ data, onDelete, onEdit }) => {
       style: {
         backgroundColor: "#3f51b5", // Header background color
         color: "white", // Header text color
+        fontSize: "15px", // Header font size
+        fontWeight: "bold", // Header font weight
       },
     },
     rows: {
@@ -71,6 +73,8 @@ const CustomerTable = ({ data, onDelete, onEdit }) => {
       style: {
         backgroundColor: "#ecf0f1", // Pagination background color
         color: "#34495e", // Pagination text color
+        display: "flex",
+        justifyContent: "center",
       },
     },
     button: {
