@@ -1,6 +1,8 @@
 import React, { useState  } from "react";
 import DataTable from "react-data-table-component";
 import './customerTable.css';
+import completedImage from '../../assets/completed.png';
+import inProgressImage from '../../assets/inProgress.png';
 
 const CustomerTable = ({ data, onDelete, onEdit }) => {
   const [searchText, setSearchText] = useState('');
@@ -24,8 +26,39 @@ const CustomerTable = ({ data, onDelete, onEdit }) => {
     { name: "Place", selector: (row) => row.place, sortable: true },
     { name: "Age", selector: (row) => row.age, sortable: true },
     { name: "Total Cost", selector: (row) => row.totalCost, sortable: true },
-    { name: "Start Date", selector: (row) => row.startDate, sortable: true },
     { name: "Address", selector: (row) => row.address, sortable: true },
+    { name: "Start Date", selector: (row) => row.startDate, sortable: true },
+    { name: "End Date", selector: (row) => row.endDate || '-', sortable: true }, // Display 'N/A' if endDate is not available
+    {
+      name: "Status",
+      cell: (row) => (
+        <div style={{ display: "flex", alignItems: "center" }}>
+          {row.endDate ? (
+            <>
+              <img
+                src={completedImage}
+                alt="Completed"
+                style={{ width: "20px", height: "20px", marginRight: "8px" }}
+              />
+              <span style={{ display: "inline-block", verticalAlign: "middle" }}>
+                Completed
+              </span>
+            </>
+          ) : (
+            <>
+              <img
+                src={inProgressImage}
+                alt="In Progress"
+                style={{ width: "20px", height: "20px", marginRight: "8px" }}
+              />
+              <span style={{ display: "inline-block", verticalAlign: "middle" }}>
+                In Progress
+              </span>
+            </>
+          )}
+        </div>
+      ),
+    },
     {
       name: "",
       cell: (row) => (

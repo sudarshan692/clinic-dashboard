@@ -87,38 +87,42 @@ const AddCustomerModal = ({ isOpen, onRequestClose, isMobileUnique, setIsMobileU
 
 
   // Function to handle saving customer data to the 'customers' collection
-  const handleSave = async () => {
-    try {
-      // Check if the mobile number is unique
-      const isUnique = await checkMobileNumberUnique(customerData.mobile);
+const handleSave = async () => {
+  try {
+    // Check if the mobile number is unique
+    const isUnique = await checkMobileNumberUnique(customerData.mobile);
 
-      if (isUnique) {
-        // Save data with the specified document ID (customerID) and include customerID as a field
-        await db.collection('customers').doc(String(customerData.customerID)).set({
-          // Include other customer data here
-          ...customerData,
-        });
-        // Clear input boxes after successful save
-        setCustomerData({
-          customerID: '',
-          name: '',
-          mobile: '',
-          place: '',
-          address: '',
-          age: '',
-          totalCost: '',
-          startDate: '',
-        });
-        // Close the modal after successful save
-        onRequestClose();
-      } else {
-        // Handle case where mobile number is not unique
-        setIsMobileUnique(false);
-      }
-    } catch (error) {
-      console.error('Error saving customer data:', error.message);
+    if (isUnique) {
+      // Save data with the specified document ID (customerID) and include customerID as a field
+      await db.collection('customers').doc(String(customerData.customerID)).set({
+        // Include other customer data here
+        ...customerData,
+        // Set default values for status and endDate for new customers
+        status: 'In Progress',
+        endDate: '',
+      });
+      // Clear input boxes after successful save
+      setCustomerData({
+        customerID: '',
+        name: '',
+        mobile: '',
+        place: '',
+        address: '',
+        age: '',
+        totalCost: '',
+        startDate: '',
+      });
+      // Close the modal after successful save
+      onRequestClose();
+    } else {
+      // Handle case where mobile number is not unique
+      setIsMobileUnique(false);
     }
-  };
+  } catch (error) {
+    console.error('Error saving customer data:', error.message);
+  }
+};
+
   
 
   return (

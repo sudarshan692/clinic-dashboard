@@ -7,6 +7,8 @@ const EditCustomerModal = ({ isOpen, onRequestClose, initialData, isMobileUnique
     const [editedData, setEditedData] = useState({
       name: '',
       mobile: '',
+      endDate: '', // Add endDate property
+      status: '',
       // ... other properties with default values
     });
 
@@ -24,27 +26,35 @@ const EditCustomerModal = ({ isOpen, onRequestClose, initialData, isMobileUnique
     }));
   };
 
-  // Handle save button click in the edit modal
   const handleSave = async () => {
     try {
-      // Check if the mobile number is unique
       const isUnique = await checkMobileNumberUnique(editedData.mobile, initialData.uniqueID);
-
+  
       if (isUnique) {
+        // Validate that End Date is greater than Start Date
+        if (editedData.startDate && editedData.endDate && new Date(editedData.endDate) <= new Date(editedData.startDate)) {
+          alert("End Date must be greater than Start Date");
+          return;
+        }
+  
         // Update the data with the specified document ID (uniqueID) within the customers collection
-        await db.collection('customers').doc(initialData.uniqueID).update({
-          // Include other customer data here
+        const updatedData = {
           ...editedData,
-        });
+          // Add logic to set endDate and status based on user input
+          endDate: editedData.endDate || '', // Use editedData.endDate if provided, otherwise keep it empty
+          status: editedData.endDate ? 'Completed' : 'In Progress', // Set status based on the presence of endDate
+        };
+  
+        await db.collection('customers').doc(initialData.uniqueID).update(updatedData);
         onEditSuccess(); // Callback to handle success and refetch data
       } else {
-        // Handle case where mobile number is not unique
         setIsMobileUnique(false);
       }
     } catch (error) {
       console.error('Error saving edited customer data:', error.message);
     }
   };
+  
 
   // Function to check if the mobile number is unique for the edited customer
   const checkMobileNumberUnique = async (mobileNumber, currentUniqueID) => {
@@ -117,7 +127,14 @@ const EditCustomerModal = ({ isOpen, onRequestClose, initialData, isMobileUnique
         <label>Start Date:</label>
         <input type="date" name="startDate" value={editedData.startDate || ''} onChange={handleInputChange} />
       </div>
-
+      <div>
+        <label>End Date:</label>
+        <input type="date" name="endDate" value={editedData.endDate || ''} onChange={handleInputChange} />
+      </div>
+      {/* <div>
+        <label>Status:</label>
+        <span>{editedData.status}</span>
+      </div> */}
       {/* Include input fields for other editable properties (place, address, age, totalCost, startDate) */}
       {/* ... */}
       <div>

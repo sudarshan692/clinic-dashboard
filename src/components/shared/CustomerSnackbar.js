@@ -1,5 +1,3 @@
-// CustomSnackbar.js
-
 import React, { useState, useEffect } from 'react';
 
 const CustomSnackbar = ({ message, duration, onClose }) => {
