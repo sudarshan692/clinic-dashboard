@@ -92,6 +92,13 @@ const CustomerTable = ({ data, onDelete, onEdit }) => {
         fontWeight: "bold", // Header font weight
       },
     },
+    paymentCell: {
+      style: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+      },
+    },
     rows: {
       style: {
         "&:nth-child(odd)": {
