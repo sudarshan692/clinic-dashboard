@@ -48,7 +48,7 @@
     font-size: 15px;
     display: flex;
     width: 420px; /* Set the width to match the input boxes */
-    flex-direction: column;
+    justify-content: center;
     padding: 15px;
     border-width: 0px;
     border-radius: 6px;
