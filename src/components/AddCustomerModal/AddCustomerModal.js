@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Modal from 'react-modal';
-import { db } from './firebase'; // Assuming you have a 'db' instance from Firebase
+import { db } from '../shared/firebase'; // Assuming you have a 'db' instance from Firebase
 
 // Functional component for the Add Customer Modal
 const AddCustomerModal = ({ isOpen, onRequestClose, isMobileUnique, setIsMobileUnique }) => {

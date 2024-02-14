@@ -2,9 +2,9 @@ import React, { useState, useEffect } from "react";
 import { auth, db } from "../shared/firebase";
 import { useHistory } from "react-router-dom";
 import LoadingSpinner from "../shared/LoadingSpinner";
-import AddCustomerModal from "../shared/AddCustomerModel";
+import AddCustomerModal from "../AddCustomerModal/AddCustomerModal";
 import CustomerTable from "../CustomerTable/CustomerTable";
-import EditCustomerModal from "../shared/EditCustomerModal";
+import EditCustomerModal from "../EditCustomerModal/EditCustomerModal";
 import './dashboard.css'
 // Functional component for the Dashboard page
 const Dashboard = () => {

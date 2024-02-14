@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Modal from 'react-modal';
-import { db } from './firebase';
+import { db } from '../shared/firebase';
+import '../EditCustomerModal/editCustomerModal.css';
 
 const EditCustomerModal = ({ isOpen, onRequestClose, initialData, isMobileUnique, setIsMobileUnique, onEditSuccess }) => {
   // State variable to manage the edited customer data
@@ -75,9 +76,10 @@ const EditCustomerModal = ({ isOpen, onRequestClose, initialData, isMobileUnique
   // Custom styles for the modal
   const customStyles = {
     content: {
-      width: '50%', // Set your custom width here
-      height: '70%', // Set your custom height here
+      width: '1100px', // Set your custom width here
+      height: '600px', // Set your custom height here
       margin: 'auto', // Center the modal
+      padding: '0', 
       overflow: 'auto', // Allow scrolling if content overflows
     },
   };
@@ -90,50 +92,52 @@ const EditCustomerModal = ({ isOpen, onRequestClose, initialData, isMobileUnique
       contentLabel="Edit Customer Modal"
       style={customStyles} // Apply custom styles
     >
-      <h2>Edit Customer</h2>
-      {/* Render input fields for each editable property */}
-      <div>
-        <label>Customer ID:</label>
-        <span>{editedData.customerID}</span>
-      </div>
-      <div>
-        <label>Name:</label>
-        <input type="text" name="name" value={editedData.name || ''} onChange={handleInputChange} />
-      </div>
-      <div>
-        <label>Mobile Number:</label>
-        <input type="text" name="mobile" value={editedData.mobile || ''} onChange={handleInputChange} />
+      <div className='maincard'>
+      <h2 className='edit-customer-heading'>Edit Customer</h2>
+      <p className='customerID'>CustomerID: {editedData.customerID}</p>
+      <div className='container1'>
+        <label className='all-label'>Name *
+        <input className='inputbox1' type="text" name="name" value={editedData.name || ''} onChange={handleInputChange} />
+        </label>
+        <label  className='all-label'>Mobile Number *
+        <input className='inputbox1' type="text" name="mobile" value={editedData.mobile || ''} onChange={handleInputChange} />
         {isMobileUnique ? null : (
           <div style={{ color: 'red' }}>Mobile number must be unique</div>
         )}
+        </label>
+      </div>
+
+      <div className='container1'>
+        <label className='all-label'>Place *
+        <input className='inputbox1' type="text" name="place" value={editedData.place || ''} onChange={handleInputChange} />
+        </label>
+        <label className='all-label'>Address *
+        <input className='inputbox1' type="text" name="address" value={editedData.address || ''} onChange={handleInputChange} />
+        </label>
+      </div>
+
+      <div className='container1'>
+        <label className='all-label'>Age *
+        <input className='inputbox1' type="text" name="age" value={editedData.age || ''} onChange={handleInputChange} />
+        </label>
+        <label className='all-label'>Total Cost *
+        <input className='inputbox1' type="text" name="totalCost" value={editedData.totalCost || ''} onChange={handleInputChange} />
+        </label>
+      </div>
+      <div className='container1'>
+        <label className='all-label'>Start Date *
+        <input className='inputbox1'type="date" name="startDate" value={editedData.startDate || ''} onChange={handleInputChange} />
+        </label>
+        <label className='all-label'>End Date *
+        <input className='inputbox1' type="date" name="endDate" value={editedData.endDate || ''} onChange={handleInputChange} />
+        </label>
       </div>
       <div>
-        <label>Place:</label>
-        <input type="text" name="place" value={editedData.place || ''} onChange={handleInputChange} />
+        <button class="right-bottom-button-cancel" onClick={onRequestClose}>Cancel</button>
       </div>
       <div>
-        <label>Address:</label>
-        <input type="text" name="address" value={editedData.address || ''} onChange={handleInputChange} />
+        <button  class="right-bottom-button-save" onClick={handleSave}>Save</button>
       </div>
-      <div>
-        <label>Age:</label>
-        <input type="text" name="age" value={editedData.age || ''} onChange={handleInputChange} />
-      </div>
-      <div>
-        <label>Total Cost:</label>
-        <input type="text" name="totalCost" value={editedData.totalCost || ''} onChange={handleInputChange} />
-      </div>
-      <div>
-        <label>Start Date:</label>
-        <input type="date" name="startDate" value={editedData.startDate || ''} onChange={handleInputChange} />
-      </div>
-      <div>
-        <label>End Date:</label>
-        <input type="date" name="endDate" value={editedData.endDate || ''} onChange={handleInputChange} />
-      </div>
-      <div>
-        <button onClick={handleSave}>Save</button>
-        <button onClick={onRequestClose}>Cancel</button>
       </div>
     </Modal>
   );
