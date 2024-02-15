@@ -1,81 +1,84 @@
 .maincard {
-    background-color: #0d2136;
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
-    height: 100%;
-    border-radius: 0px;
-    border-width: 0px;
-    border: 1px solid #3f51b5;
-    box-sizing: border-box;
-    font-family: Roboto, "Helvetica Neue", sans-serif;
-  }
-  .payment-input {
-    margin-top: 10px;
-    margin-bottom: 5px;
-    display: flex;
-    justify-content: center;
-    font-size: 15px;
-    height: 20px;
-    padding: 10px;
-    border-radius: 6px;
-    width: 300px;
-    background: rgb(3, 21, 37);
-    border-width: 0px;
-    border-color: #092635;
-    color: rgb(211, 227, 253);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
-  .container1 {
-      display: flex;
-      justify-content: space-between;
-      margin-left: 50px;
-      margin-right: 50px;
-      margin-top: 10px;
-    }
-  .all-label {
-      margin-top: 20px;
-      color: rgb(211, 227, 253);
-    } 
-  .edit-customer-heading{
-    margin-top: 0px;
-    color: rgb(211, 227, 253);
-    display: flex;
-    justify-content: center;
-    padding: 10px;
-    background-color: #3f51b5;
-  }
-  .customerID {
-      width: 150px;
-    color: rgb(211, 227, 253);
-    margin-top: -64px;
-    margin-left: 10px;
-    border: 1px solid rgb(211, 227, 253);
-    box-sizing: border-box;
-    margin-right: 1000px;
-    padding: 10px;
-    border-radius: 8px;
-  }
-  .right-bottom-button-cancel {
-      width: 60px;
-      position: absolute;
-      bottom: 0;
-      right: 0;
-      margin-right: 90px;
-      margin-bottom: 10px;
-      background-color: #3f51b5;
-      padding: 10px;
-      border: 0;
-      border-radius: 6px;
-      color: white;
-    }
-    .right-bottom-button-save {
-        width: 60px;
-        position: absolute;
-        bottom: 0;
-        right: 0;
-        margin: 10px;
-        background-color: #3f51b5;
-        padding: 10px;
-        border: 0;
-        border-radius: 6px;
-        color: white;
-      }
+  background-color: #0d2136;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+  height: 100%;
+  border-radius: 0px;
+  border-width: 0px;
+  border: 1px solid #3f51b5;
+  box-sizing: border-box;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+.payment-input {
+  margin-top: 10px;
+  margin-bottom: 5px;
+  display: flex;
+  justify-content: center;
+  font-size: 15px;
+  height: 20px;
+  padding: 10px;
+  border-radius: 6px;
+  width: 300px;
+  background: rgb(3, 21, 37);
+  border-width: 0px;
+  border-color: #092635;
+  color: rgb(211, 227, 253);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+.payment-input:disabled{
+  cursor: not-allowed;
+}
+.container1 {
+  display: flex;
+  justify-content: space-between;
+  margin-left: 50px;
+  margin-right: 50px;
+  margin-top: 10px;
+}
+.all-label {
+  margin-top: 20px;
+  color: rgb(211, 227, 253);
+}
+.edit-customer-heading {
+  margin-top: 0px;
+  color: rgb(211, 227, 253);
+  display: flex;
+  justify-content: center;
+  padding: 10px;
+  background-color: #3f51b5;
+}
+.right-bottom-button-cancel {
+  width: 60px;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  margin-right: 90px;
+  margin-bottom: 10px;
+  background-color: #3f51b5;
+  padding: 10px;
+  border: 0;
+  border-radius: 6px;
+  color: white;
+  cursor: pointer;
+}
+.right-bottom-button-save {
+  width: 60px;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  margin: 10px;
+  background-color: #3f51b5;
+  padding: 10px;
+  border: 0;
+  border-radius: 6px;
+  color: white;
+  cursor: pointer;
+}
+.alert-message{
+  color: red;
+  margin-top: 8px;
+  margin-left: 50px;
+}
+.right-bottom-button-save:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}

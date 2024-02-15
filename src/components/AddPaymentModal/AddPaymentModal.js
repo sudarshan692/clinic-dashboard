@@ -12,7 +12,7 @@ const AddPaymentModal = ({ isOpen, onRequestClose, selectedCustomer, onPaymentAd
 
   const handleSave = async () => {
     try {
-      if (!paymentAmount) {
+      if (!paymentAmount || !selectedCustomer) {
         // Handle validation or show an error message
         return;
       }
@@ -34,16 +34,30 @@ const AddPaymentModal = ({ isOpen, onRequestClose, selectedCustomer, onPaymentAd
     }
   };
 
-    // Custom styles for the modal
-    const customStyles = {
-      content: {
-        width: '500px', // Set your custom width here
-        height: '250px', // Set your custom height here
-        margin: 'auto', // Center the modal
-        padding: '0', 
-        overflow: 'auto', // Allow scrolling if content overflows
-      },
-    };
+  // Custom styles for the modal
+  const customStyles = {
+    content: {
+      width: '500px', // Set your custom width here
+      height: '300px', // Set your custom height here
+      margin: 'auto', // Center the modal
+      padding: '0',
+      overflow: 'auto', // Allow scrolling if content overflows
+    },
+  };
+
+  // If selectedCustomer is null, return an empty modal or handle it accordingly
+  if (!selectedCustomer) {
+    return (
+      <Modal
+        isOpen={isOpen}
+        onRequestClose={onRequestClose}
+        contentLabel="Add Payment Modal"
+        style={customStyles}
+      >
+        <div>No customer selected</div>
+      </Modal>
+    );
+  }
 
   return (
     <Modal
@@ -53,18 +67,29 @@ const AddPaymentModal = ({ isOpen, onRequestClose, selectedCustomer, onPaymentAd
       style={customStyles}
     >
       <div className='maincard'>
-      <h2  className='edit-customer-heading'>Add Payment</h2>
-      <div className='container1'>
-        <label className='all-label'> Payment Amount:
-          <input className='payment-input' type="text" value={paymentAmount} onChange={handleInputChange}/>
-        </label>
-        <div>
-        <button class="right-bottom-button-cancel" onClick={onRequestClose}>Cancel</button>
-      </div>
-      <div>
-        <button  class="right-bottom-button-save" onClick={handleSave}>Save</button>
-      </div>
-      </div>
+        <h2 className='edit-customer-heading'>Add Payment</h2>
+        <div className='container1'>
+          <label className='all-label'> Payment Amount:
+            <input className='payment-input' type="text" value={paymentAmount} onChange={handleInputChange}  disabled={selectedCustomer.endDate !== ''} />
+          </label>
+          <div>
+            <button class="right-bottom-button-cancel" onClick={onRequestClose}>Cancel</button>
+          </div>
+          <div>
+            <button
+              class="right-bottom-button-save"
+              onClick={handleSave}
+              disabled={selectedCustomer.endDate !== ''} // Disable if endDate is not an empty string
+            >
+              Save
+            </button>
+          </div>
+        </div>
+        {selectedCustomer.endDate !== '' && (
+            <div className='alert-message'>
+              Cannot add payment, since End Date is added...
+            </div>
+          )}
       </div>
     </Modal>
   );
