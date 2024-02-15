@@ -178,7 +178,7 @@ return (
       </div>
     ) : (
       // Display the CustomerTable component with customer data and onDelete function
-      <CustomerTable data={customers} onDelete={handleDelete} onEdit={onEdit} />
+      <CustomerTable data={customers} onDelete={handleDelete} onEdit={onEdit} onPaymentAdded={fetchCustomers} />
     )}
      {isCustomAlertOpen && (
         <CustomAlert

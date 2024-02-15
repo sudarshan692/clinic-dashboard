@@ -20,7 +20,8 @@ const AddPaymentModal = ({ isOpen, onRequestClose, selectedCustomer, onPaymentAd
       await db.collection('customers').doc(String(selectedCustomer.customerID)).update({
         payments: firebase.firestore.FieldValue.arrayUnion({
           amount: parseFloat(paymentAmount),
-          date: new Date().toISOString(),
+          date: new Date().toLocaleDateString('en-IN'), // Indian date format
+          time: new Date().toLocaleTimeString('en-IN'), // Indian time format
         }),
       });
       // Clear payment input box after successful save

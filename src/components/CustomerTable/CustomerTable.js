@@ -5,12 +5,14 @@ import completedImage from '../../assets/completed.png';
 import inProgressImage from '../../assets/inProgress.png';
 import AddPaymentModal from "../AddPaymentModal/AddPaymentModal";
 import addPaymentIcon from '../../assets/plus.png';
+import CustomerDetailsDialog from "../CustomerDetailsDialog/CustomerDetailsDialog"; 
 
-const CustomerTable = ({ data, onDelete, onEdit }) => {
+const CustomerTable = ({ data, onDelete, onEdit, onPaymentAdded }) => {
   const [searchText, setSearchText] = useState('');
   const [isAddPaymentModalOpen, setIsAddPaymentModalOpen] = useState(false);
   const [selectedCustomer, setSelectedCustomer] = useState(null);
-
+  const [isCustomerDetailsDialogOpen, setIsCustomerDetailsDialogOpen] = useState(false);
+  const [selectedCustomerDetails, setSelectedCustomerDetails] = useState(null);
  
 
   const handleSearch = (e) => {
@@ -29,8 +31,18 @@ const CustomerTable = ({ data, onDelete, onEdit }) => {
   
   const handlePaymentAdded = () => {
     // Optional: You can perform any action after a payment is added, e.g., refreshing data
+    onPaymentAdded();  
   };
 
+  const handleRowClick = (row) => {
+    // Display customer details dialog on row click
+    setSelectedCustomerDetails(row);
+    setIsCustomerDetailsDialogOpen(true);
+  };
+
+  const closeCustomerDetailsDialog = () => {
+    setIsCustomerDetailsDialogOpen(false);
+  };
 
   const filteredData = data.filter((item) =>
     Object.values(item).some(
@@ -173,7 +185,7 @@ const CustomerTable = ({ data, onDelete, onEdit }) => {
           sortIcon={<i className="material-icons">arrow_upward</i>}
           defaultSortField="customerID"
           customStyles={customStyles}
-          
+          onRowClicked={handleRowClick}
         />
          {/* Render the AddPaymentModal */}
       <AddPaymentModal
@@ -181,6 +193,11 @@ const CustomerTable = ({ data, onDelete, onEdit }) => {
         onRequestClose={closeAddPaymentModal}
         selectedCustomer={selectedCustomer}
         onPaymentAdded={handlePaymentAdded}
+      />
+       <CustomerDetailsDialog
+        isOpen={isCustomerDetailsDialogOpen}
+        onRequestClose={closeCustomerDetailsDialog}
+        customerDetails={selectedCustomerDetails}
       />
       </div>
     </div>
