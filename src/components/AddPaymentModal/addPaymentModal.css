@@ -8,16 +8,16 @@
     box-sizing: border-box;
     font-family: Roboto, "Helvetica Neue", sans-serif;
   }
-  .inputbox1 {
+  .payment-input {
     margin-top: 10px;
     margin-bottom: 5px;
     display: flex;
     justify-content: center;
     font-size: 15px;
-    height: 30px;
+    height: 20px;
     padding: 10px;
     border-radius: 6px;
-    width: 400px;
+    width: 300px;
     background: rgb(3, 21, 37);
     border-width: 0px;
     border-color: #092635;
@@ -55,21 +55,20 @@
     border-radius: 8px;
   }
   .right-bottom-button-cancel {
-      width: 100px;
+      width: 60px;
       position: absolute;
       bottom: 0;
       right: 0;
-      margin-right: 150px;
+      margin-right: 90px;
       margin-bottom: 10px;
       background-color: #3f51b5;
       padding: 10px;
       border: 0;
       border-radius: 6px;
       color: white;
-      cursor: pointer;
     }
     .right-bottom-button-save {
-        width: 100px;
+        width: 60px;
         position: absolute;
         bottom: 0;
         right: 0;
@@ -79,5 +78,4 @@
         border: 0;
         border-radius: 6px;
         color: white;
-        cursor: pointer;
       }

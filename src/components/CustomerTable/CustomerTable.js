@@ -3,15 +3,35 @@ import DataTable from "react-data-table-component";
 import './customerTable.css';
 import completedImage from '../../assets/completed.png';
 import inProgressImage from '../../assets/inProgress.png';
+import AddPaymentModal from "../AddPaymentModal/AddPaymentModal";
+import addPaymentIcon from '../../assets/plus.png';
 
 const CustomerTable = ({ data, onDelete, onEdit }) => {
   const [searchText, setSearchText] = useState('');
+  const [isAddPaymentModalOpen, setIsAddPaymentModalOpen] = useState(false);
+  const [selectedCustomer, setSelectedCustomer] = useState(null);
 
+ 
 
   const handleSearch = (e) => {
     setSearchText(e.target.value);
   };
 
+  const handleAddPaymentClick = (customer) => {
+    setSelectedCustomer(customer);
+    setIsAddPaymentModalOpen(true);
+  };
+
+  const closeAddPaymentModal = () => {
+    setIsAddPaymentModalOpen(false);
+  };
+
+  
+  const handlePaymentAdded = () => {
+    // Optional: You can perform any action after a payment is added, e.g., refreshing data
+  };
+
+  
   const filteredData = data.filter((item) =>
     Object.values(item).some(
       (value) =>
@@ -29,8 +49,7 @@ const CustomerTable = ({ data, onDelete, onEdit }) => {
     { name: "Address", selector: (row) => row.address, sortable: true },
     { name: "Start Date", selector: (row) => row.startDate, sortable: true },
     { name: "End Date", selector: (row) => row.endDate || '-', sortable: true }, // Display 'N/A' if endDate is not available
-    {
-      name: "Status",
+    { name: "Status",
       cell: (row) => (
         <div style={{ display: "flex", alignItems: "center" }}>
           {row.endDate ? (
@@ -59,8 +78,7 @@ const CustomerTable = ({ data, onDelete, onEdit }) => {
         </div>
       ),
     },
-    {
-      name: "",
+    { name: "",
       cell: (row) => (
         <>
           <span
@@ -72,12 +90,19 @@ const CustomerTable = ({ data, onDelete, onEdit }) => {
           </span>
           <span
             className="material-icons"
-            style={{ cursor: "pointer" }}
+            style={{ cursor: "pointer", color: 'red' }}
             onClick={() => onDelete(row.uniqueID)}
     
           >
             delete
           </span>
+          
+          <button
+          className="add-payment-button"
+          onClick={() => handleAddPaymentClick(row)}
+        >
+         <img className="plus" src={addPaymentIcon} alt="Add Payment" />
+        </button>
         </>
       ),
     },
@@ -148,7 +173,15 @@ const CustomerTable = ({ data, onDelete, onEdit }) => {
           sortIcon={<i className="material-icons">arrow_upward</i>}
           defaultSortField="customerID"
           customStyles={customStyles}
+          
         />
+         {/* Render the AddPaymentModal */}
+      <AddPaymentModal
+        isOpen={isAddPaymentModalOpen}
+        onRequestClose={closeAddPaymentModal}
+        selectedCustomer={selectedCustomer}
+        onPaymentAdded={handlePaymentAdded}
+      />
       </div>
     </div>
   );
