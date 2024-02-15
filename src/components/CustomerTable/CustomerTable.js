@@ -41,13 +41,13 @@ const CustomerTable = ({ data, onDelete, onEdit }) => {
 
   const columns = [
     { name: "Customer ID", selector: (row) => row.customerID, sortable: true },
-    { name: "Name",  selector: (row) => row.name, sortable: true },
-    { name: "Mobile Number", selector: (row) => row.mobile, sortable: true },
-    { name: "Place", selector: (row) => row.place, sortable: true },
-    { name: "Age", selector: (row) => row.age, sortable: true },
-    { name: "Total Cost", selector: (row) => row.totalCost, sortable: true },
-    { name: "Address", selector: (row) => row.address, sortable: true },
-    { name: "Start Date", selector: (row) => row.startDate, sortable: true },
+    { name: "Name",  selector: (row) => row.name || '-', sortable: true },
+    { name: "Mobile Number", selector: (row) => row.mobile || '-', sortable: true },
+    { name: "Place", selector: (row) => row.place || '-', sortable: true },
+    { name: "Age", selector: (row) => row.age || '-', sortable: true },
+    { name: "Total Cost", selector: (row) => row.totalCost || '-', sortable: true },
+    { name: "Address", selector: (row) => row.address || '-', sortable: true },
+    { name: "Start Date", selector: (row) => row.startDate || '-', sortable: true },
     { name: "End Date", selector: (row) => row.endDate || '-', sortable: true }, // Display 'N/A' if endDate is not available
     { name: "Status",
       cell: (row) => (
