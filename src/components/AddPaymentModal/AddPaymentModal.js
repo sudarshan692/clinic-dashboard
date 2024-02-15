@@ -86,10 +86,10 @@ const AddPaymentModal = ({ isOpen, onRequestClose, selectedCustomer, onPaymentAd
           </div>
         </div>
         {selectedCustomer.endDate !== '' && (
-            <div className='alert-message'>
-              Cannot add payment, since End Date is added...
-            </div>
-          )}
+          <div className='alert-message'>
+            Cannot add payment, since End Date is added...
+          </div>
+        )}
       </div>
     </Modal>
   );

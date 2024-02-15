@@ -31,7 +31,7 @@ const CustomerTable = ({ data, onDelete, onEdit }) => {
     // Optional: You can perform any action after a payment is added, e.g., refreshing data
   };
 
-  
+
   const filteredData = data.filter((item) =>
     Object.values(item).some(
       (value) =>
