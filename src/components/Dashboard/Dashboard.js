@@ -6,6 +6,41 @@ import AddCustomerModal from "../AddCustomerModal/AddCustomerModal";
 import CustomerTable from "../CustomerTable/CustomerTable";
 import EditCustomerModal from "../EditCustomerModal/EditCustomerModal";
 import './dashboard.css'
+import Modal from 'react-modal';
+
+// Define your CustomAlert component
+const CustomAlert = ({ message, onConfirm, onCancel }) => {
+   // Custom styles for the modal
+   const customStyles = {
+    content: {
+    
+      width: '400px', // Set your custom width here
+      height: '150px',
+      margin: 'auto', // Center the modal
+      padding: '15px',
+      borderRadius: '10px',
+      backgroundColor: '#3f51b5', // Set your custom background color here
+      color: 'white',
+
+    },
+  };
+  return (
+    <Modal
+      isOpen={true}
+      contentLabel="Custom Alert"
+      style={customStyles}
+    >
+      <div>
+        <h2>Confirm delete</h2>
+        <p>{message}</p>
+            <button className="alert-button1" onClick={onConfirm}>Confirm</button>
+            <button className="alert-buttons" onClick={onCancel}>Cancel</button>
+      </div>
+    </Modal>
+  );
+};
+
+
 // Functional component for the Dashboard page
 const Dashboard = () => {
   const history = useHistory();
@@ -15,6 +50,8 @@ const Dashboard = () => {
   const [isEditCustomerModalOpen, setIsEditCustomerModalOpen] = useState(false);
   const [editCustomerData, setEditCustomerData] = useState(null);
   const [isMobileUnique, setIsMobileUnique] = useState(true);
+  const [isCustomAlertOpen, setIsCustomAlertOpen] = useState(false);
+  const [customerToDelete, setCustomerToDelete] = useState(null);
 
   // Function to fetch customer data from the Firestore database
   const fetchCustomers = async () => {
@@ -59,21 +96,30 @@ const Dashboard = () => {
     }
   };
 
+  
+  // Function to open the custom alert
+  const openCustomAlert = (customer) => {
+    setCustomerToDelete(customer);
+    setIsCustomAlertOpen(true);
+  };
+
+  // Function to close the custom alert
+  const closeCustomAlert = () => {
+    setIsCustomAlertOpen(false);
+    setCustomerToDelete(null);
+  };
+
+  // Updated handleDelete function to use custom alert
+  const handleDelete = (uniqueID) => {
+    const customer = customers.find((c) => c.uniqueID === uniqueID);
+    if (customer) {
+      openCustomAlert(customer);
+    }
+  };
+
   // Function to open the Add Customer modal
   const openAddCustomerModal = () => {
     setIsAddCustomerModalOpen(true);
-  };
-
-  // Function to handle the deletion of a customer
-  const handleDelete = (uniqueID) => {
-    // Show alert for confirmation
-    const userConfirmed = window.confirm(
-      "Are you sure you want to delete this customer?"
-    );
-    // If user confirmed, proceed with deletion
-    if (userConfirmed) {
-      deleteCustomer(uniqueID); // Pass uniqueID to the deleteCustomer function
-    }
   };
 
   // Function to open the Edit Customer modal and set the current customer data
@@ -134,6 +180,16 @@ return (
       // Display the CustomerTable component with customer data and onDelete function
       <CustomerTable data={customers} onDelete={handleDelete} onEdit={onEdit} />
     )}
+     {isCustomAlertOpen && (
+        <CustomAlert
+          message={`Are you sure want to delete customer ${customerToDelete.customerID}?`}
+          onConfirm={() => {
+            deleteCustomer(customerToDelete.uniqueID);
+            closeCustomAlert();
+          }}
+          onCancel={closeCustomAlert}
+        />
+      )}
     <button className="add-customer-btn" onClick={openAddCustomerModal}>Add Customer</button>
     <AddCustomerModal
       isOpen={isAddCustomerModalOpen}
