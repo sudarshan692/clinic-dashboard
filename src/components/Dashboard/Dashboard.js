@@ -19,7 +19,8 @@ const CustomAlert = ({ message, onConfirm, onCancel }) => {
       margin: 'auto', // Center the modal
       padding: '15px',
       borderRadius: '10px',
-      backgroundColor: '#3f51b5', // Set your custom background color here
+      border: '10px',
+      backgroundColor: '#0d2136', // Set your custom background color here
       color: 'white',
 
     },
@@ -31,7 +32,7 @@ const CustomAlert = ({ message, onConfirm, onCancel }) => {
       style={customStyles}
     >
       <div>
-        <h2>Confirm delete</h2>
+        <h2 className="confirm-delete">Confirm delete</h2>
         <p>{message}</p>
             <button className="alert-button1" onClick={onConfirm}>Confirm</button>
             <button className="alert-buttons" onClick={onCancel}>Cancel</button>
