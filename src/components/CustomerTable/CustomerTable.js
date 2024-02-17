@@ -102,7 +102,7 @@ const CustomerTable = ({ data, onDelete, onEdit, onPaymentAdded }) => {
           </span>
           <span
             className="material-icons"
-            style={{ cursor: "pointer", color: 'red' }}
+            style={{ cursor: "pointer", color: '#BE3144' }}
             onClick={() => onDelete(row.uniqueID)}
     
           >
@@ -139,17 +139,20 @@ const CustomerTable = ({ data, onDelete, onEdit, onPaymentAdded }) => {
     rows: {
       style: {
         "&:nth-child(odd)": {
-          backgroundColor: "#e0e0e0",
+          backgroundColor: "#0d2136",
+          color: 'white'
         },
         "&:nth-child(even)": {
-          backgroundColor: "#f2f2f2",
+          backgroundColor: '#162c46',
+          color: 'white'
         },
       },
     },
     pagination: {
       style: {
-        backgroundColor: "#ecf0f1", // Pagination background color
-        color: "#34495e", // Pagination text color
+        backgroundColor: '#3f51b5',
+        // backgroundColor: "#ecf0f1", 
+        color: "white", // Pagination text color
         display: "flex",
         justifyContent: "center",
       },

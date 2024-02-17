@@ -3,7 +3,7 @@ th:hover .sort-icon {
     opacity: 0.5;
     height: 1px;
   }
-  
+
   /* Updated styles for the sort icon */
   .sort-icon {
     opacity: 0; /* Initially hidden */
@@ -29,24 +29,36 @@ th:hover .sort-icon {
 
 }
 .search-input {
-  padding: 10px;
-  border: 1px solid #3f51b5;
+  background-color: #162c46;
+  color: white;
+  padding: 12px;
+  border: 0;
+  /* border: 1px solid #3f51b5; */
   border-radius: 4px;
-  width: 300px;
+  width: 400px;
   margin-bottom: 10px;
   margin-top: -10px;
 }
-.material-icons{
+.material-icons {
   margin-top: 5px;
   margin-left: 10px;
   color: #3f51b5;
+  border-radius: 50%;
+  padding: 5px;
+  transition: background-color 0.3s; /* Add transition for smooth color change */
 }
+
+.material-icons:hover {
+  background: #0d2136; /* Specify the background color on hover */
+}
+
 .add-payment-button{
   background-color: transparent;
-  border-width: 0;
-  cursor: pointer;
   margin-top: 9px;
   margin-left: 10px;
+  border: 0;
+  border-radius: 40%;
+  cursor: pointer;
 }
 .plus{
   height: 20px;
