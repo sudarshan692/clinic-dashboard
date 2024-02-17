@@ -4,7 +4,6 @@ import './customerTable.css';
 import completedImage from '../../assets/completed.png';
 import inProgressImage from '../../assets/inProgress.png';
 import AddPaymentModal from "../AddPaymentModal/AddPaymentModal";
-import addPaymentIcon from '../../assets/plus.png';
 import CustomerDetailsDialog from "../CustomerDetailsDialog/CustomerDetailsDialog"; 
 
 const CustomerTable = ({ data, onDelete, onEdit, onPaymentAdded }) => {
@@ -109,12 +108,13 @@ const CustomerTable = ({ data, onDelete, onEdit, onPaymentAdded }) => {
             delete
           </span>
           
-          <button
-          className="add-payment-button"
-          onClick={() => handleAddPaymentClick(row)}
-        >
-         <img className="plus" src={addPaymentIcon} alt="Add Payment" />
-        </button>
+          <span
+        className="material-icons add-payment-button"
+        style={{ cursor: "pointer" }}
+        onClick={() => handleAddPaymentClick(row)}
+      >
+        add_circle_outline
+      </span>
         </>
       ),
     },

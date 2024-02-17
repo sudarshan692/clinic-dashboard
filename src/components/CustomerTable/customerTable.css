@@ -1,10 +1,8 @@
-/* Add this style to make the sort icon visible on hover */
 th:hover .sort-icon {
     opacity: 0.5;
     height: 1px;
   }
 
-  /* Updated styles for the sort icon */
   .sort-icon {
     opacity: 0; /* Initially hidden */
     transition: opacity 0.3s ease;
@@ -49,18 +47,6 @@ th:hover .sort-icon {
 }
 
 .material-icons:hover {
-  background: #0d2136; /* Specify the background color on hover */
+  background: rgba(0,0,0,.54);; /* Specify the background color on hover */
 }
 
-.add-payment-button{
-  background-color: transparent;
-  margin-top: 9px;
-  margin-left: 10px;
-  border: 0;
-  border-radius: 40%;
-  cursor: pointer;
-}
-.plus{
-  height: 20px;
-  width: 20px;
-}
