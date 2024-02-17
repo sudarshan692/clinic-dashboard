@@ -66,13 +66,15 @@ const CustomerDetailsDialog = ({ isOpen, onRequestClose, customerDetails }) => {
               <div className="payment-list-container">
                 <ul>
                   {customerDetails.payments?.length > 0 ? (
-                    customerDetails.payments.map((payment, index) => (
-                      <li key={index}>
-                        <strong>Amount:</strong> {payment.amount},{" "}
-                        <strong>Date:</strong> {payment.date},{" "}
-                        <strong>Time:</strong> {payment.time}
-                      </li>
-                    ))
+                    customerDetails.payments
+                      .sort((a, b) => new Date(b.date) - new Date(a.date)) // Sort payments by date in descending order
+                      .map((payment, index) => (
+                        <li key={index}>
+                          <strong>Amount:</strong> {payment.amount},{" "}
+                          <strong>Date:</strong> {payment.date},{" "}
+                          <strong>Time:</strong> {payment.time}
+                        </li>
+                      ))
                   ) : (
                     <li>No payments available</li>
                   )}
@@ -80,7 +82,9 @@ const CustomerDetailsDialog = ({ isOpen, onRequestClose, customerDetails }) => {
               </div>
             </div>
           )}
-          <button className="close-button" onClick={onRequestClose}>Close</button>
+          <button className="close-button" onClick={onRequestClose}>
+            Close
+          </button>
         </div>
       </div>
     </Modal>

@@ -10,7 +10,6 @@ const EditCustomerModal = ({ isOpen, onRequestClose, initialData, isMobileUnique
     mobile: '',
     endDate: '',
     status: '',
-    // ... other properties with default values
   });
 
   // Effect to update editedData when initialData changes

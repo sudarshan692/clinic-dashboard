@@ -1,4 +1,3 @@
-/* Add this CSS in your component or in a separate stylesheet */
 .container {
   position: relative;
 }
@@ -25,7 +24,7 @@
   cursor: pointer;
   font-size: 15px;
 }
-.alert-button1 {
+.confirm-alert-button {
   margin-top: 40px;
   margin-left: 270px;
   margin-right: 15px;
@@ -35,14 +34,14 @@
   border: 0;
   border-radius: 4px;
 }
-.alert-buttons {
+.cancel-alert-button {
   padding: 5px;
   background-color: #3f51b5;
   color: rgb(211, 227, 253);
   border: 0;
   border-radius: 4px;
 }
-.confirm-delete{
+.alert-heading{
   margin-top: -5px;
   color: #3f51b5;
 }

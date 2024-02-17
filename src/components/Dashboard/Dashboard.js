@@ -10,19 +10,16 @@ import Modal from 'react-modal';
 
 // Define your CustomAlert component
 const CustomAlert = ({ message, onConfirm, onCancel }) => {
-   // Custom styles for the modal
    const customStyles = {
     content: {
-    
-      width: '400px', // Set your custom width here
+      width: '400px', 
       height: '150px',
-      margin: 'auto', // Center the modal
+      margin: 'auto', 
       padding: '15px',
       borderRadius: '10px',
       border: '10px',
-      backgroundColor: '#0d2136', // Set your custom background color here
+      backgroundColor: '#0d2136',
       color: 'white',
-
     },
   };
   return (
@@ -32,10 +29,10 @@ const CustomAlert = ({ message, onConfirm, onCancel }) => {
       style={customStyles}
     >
       <div>
-        <h2 className="confirm-delete">Confirm delete</h2>
+        <h2 className="alert-heading">Confirm delete</h2>
         <p>{message}</p>
-            <button className="alert-button1" onClick={onConfirm}>Confirm</button>
-            <button className="alert-buttons" onClick={onCancel}>Cancel</button>
+            <button className="confirm-alert-button" onClick={onConfirm}>Confirm</button>
+            <button className="cancel-alert-button" onClick={onCancel}>Cancel</button>
       </div>
     </Modal>
   );
@@ -97,7 +94,6 @@ const Dashboard = () => {
     }
   };
 
-  
   // Function to open the custom alert
   const openCustomAlert = (customer) => {
     setCustomerToDelete(customer);
