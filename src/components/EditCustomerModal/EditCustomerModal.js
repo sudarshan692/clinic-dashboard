@@ -17,6 +17,11 @@ const EditCustomerModal = ({ isOpen, onRequestClose, initialData, isMobileUnique
     setEditedData({ ...initialData });
   }, [initialData]);
 
+  // Update initialData when it changes
+  useEffect(() => {
+    setErrorMessage(''); // Reset error message when initialData changes
+  }, [initialData]);
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setEditedData((prevData) => ({
@@ -41,20 +46,22 @@ const EditCustomerModal = ({ isOpen, onRequestClose, initialData, isMobileUnique
           status: editedData.endDate ? 'Completed' : 'In Progress',
         };
   
-        // Calculate total received amount for the specific customer
+        // Fetch payments data separately
         const paymentsSnapshot = await db.collection('customers').doc(initialData.uniqueID).get();
         const payments = paymentsSnapshot.data()?.payments || [];
-        
+  
         const totalReceivedAmount = payments.reduce((acc, payment) => acc + (parseFloat(payment.amount) || 0), 0);
-        const initialTotalCost = parseFloat(initialData.totalCost);
+        const editedTotalCost = parseFloat(editedData.totalCost) || 0;
   
         console.log('totalReceivedAmount:', totalReceivedAmount);
-        console.log('initialTotalCost:', initialTotalCost);
+        console.log('editedTotalCost:', editedTotalCost);
   
-        if (editedData.endDate && totalReceivedAmount !== initialTotalCost) {
+        if (editedData.endDate && editedTotalCost !== totalReceivedAmount) {
           setErrorMessage('Cannot enter End Date since total received amount is not equal to total cost');
           return;
         }
+  
+        console.log('Edited Data:', editedData); // Added console log
   
         await db.collection('customers').doc(initialData.uniqueID).update(updatedData);
         onEditSuccess();
@@ -65,8 +72,6 @@ const EditCustomerModal = ({ isOpen, onRequestClose, initialData, isMobileUnique
       console.error('Error saving edited customer data:', error.message);
     }
   };
-  
-  
   
   
 
@@ -102,6 +107,7 @@ const EditCustomerModal = ({ isOpen, onRequestClose, initialData, isMobileUnique
       overflow: 'auto',
     },
   };
+  
   // JSX for rendering the EditCustomerModal component
   return (
     <Modal
@@ -111,52 +117,52 @@ const EditCustomerModal = ({ isOpen, onRequestClose, initialData, isMobileUnique
       style={customStyles} // Apply custom styles
     >
       <div className='maincard'>
-      <h2 className='edit-customer-heading'>Edit Customer</h2>
-      <p className='customerID'>CustomerID: {editedData.customerID}</p>
-      <div className='container1'>
-        <label className='all-label'>Name *
-        <input className='inputbox1' type="text" name="name" value={editedData.name || ''} onChange={handleInputChange} />
-        </label>
-        <label  className='all-label'>Mobile Number *
-        <input className='inputbox1' type="text" name="mobile" value={editedData.mobile || ''} onChange={handleInputChange} />
-        {isMobileUnique ? null : (
-          <div style={{ color: 'red' }}>Mobile number must be unique</div>
-        )}
-        </label>
-      </div>
+        <h2 className='edit-customer-heading'>Edit Customer</h2>
+        <p className='customerID'>CustomerID: {editedData.customerID}</p>
+        <div className='container1'>
+          <label className='all-label'>Name *
+            <input className='inputbox1' type="text" name="name" value={editedData.name || ''} onChange={handleInputChange} />
+          </label>
+          <label className='all-label'>Mobile Number *
+            <input className='inputbox1' type="text" name="mobile" value={editedData.mobile || ''} onChange={handleInputChange} />
+            {isMobileUnique ? null : (
+              <div style={{ color: 'red' }}>Mobile number must be unique</div>
+            )}
+          </label>
+        </div>
 
-      <div className='container1'>
-        <label className='all-label'>Place *
-        <input className='inputbox1' type="text" name="place" value={editedData.place || ''} onChange={handleInputChange} />
-        </label>
-        <label className='all-label'>Address *
-        <input className='inputbox1' type="text" name="address" value={editedData.address || ''} onChange={handleInputChange} />
-        </label>
-      </div>
+        <div className='container1'>
+          <label className='all-label'>Place *
+            <input className='inputbox1' type="text" name="place" value={editedData.place || ''} onChange={handleInputChange} />
+          </label>
+          <label className='all-label'>Address *
+            <input className='inputbox1' type="text" name="address" value={editedData.address || ''} onChange={handleInputChange} />
+          </label>
+        </div>
 
-      <div className='container1'>
-        <label className='all-label'>Age *
-        <input className='inputbox1' type="text" name="age" value={editedData.age || ''} onChange={handleInputChange} />
-        </label>
-        <label className='all-label'>Total Cost *
-        <input className='inputbox1' type="text" name="totalCost" value={editedData.totalCost || ''} onChange={handleInputChange} />
-        </label>
-      </div>
-      <div className='container1'>
-        <label className='all-label'>Start Date *
-        <input className='inputbox1'type="date" name="startDate" value={editedData.startDate || ''} onChange={handleInputChange} />
-        </label>
-        <label className='all-label'>End Date *
-        <input className='inputbox1' type="date" name="endDate" value={editedData.endDate || ''} onChange={handleInputChange} />
-        </label>
-      </div>
-      <div>
-        <button class="right-bottom-button-cancel" onClick={onRequestClose}>Cancel</button>
-      </div>
-      <div>
-        <button  class="right-bottom-button-save" onClick={handleSave}>Save</button>
-      </div>
-      {errorMessage && (
+        <div className='container1'>
+          <label className='all-label'>Age *
+            <input className='inputbox1' type="text" name="age" value={editedData.age || ''} onChange={handleInputChange} />
+          </label>
+          <label className='all-label'>Total Cost *
+            <input className='inputbox1' type="text" name="totalCost" value={editedData.totalCost || ''} onChange={handleInputChange} />
+          </label>
+        </div>
+        <div className='container1'>
+          <label className='all-label'>Start Date *
+            <input className='inputbox1'type="date" name="startDate" value={editedData.startDate || ''} onChange={handleInputChange} />
+          </label>
+          <label className='all-label'>End Date *
+            <input className='inputbox1' type="date" name="endDate" value={editedData.endDate || ''} onChange={handleInputChange} />
+          </label>
+        </div>
+        <div>
+          <button class="right-bottom-button-cancel" onClick={onRequestClose}>Cancel</button>
+        </div>
+        <div>
+          <button class="right-bottom-button-save" onClick={handleSave}>Save</button>
+        </div>
+        {errorMessage && (
           <div className='error-message1'>
             {errorMessage}
           </div>
