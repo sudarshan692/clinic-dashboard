@@ -110,7 +110,7 @@ const CustomerTable = ({ data, onDelete, onEdit, onPaymentAdded }) => {
           
           <span
         className="material-icons add-payment-button"
-        style={{ cursor: "pointer" }}
+        style={{ cursor: "pointer", color: 'orange' }}
         onClick={() => handleAddPaymentClick(row)}
       >
         add_circle_outline

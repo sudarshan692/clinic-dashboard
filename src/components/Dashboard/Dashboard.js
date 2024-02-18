@@ -5,39 +5,39 @@ import LoadingSpinner from "../shared/LoadingSpinner";
 import AddCustomerModal from "../AddCustomerModal/AddCustomerModal";
 import CustomerTable from "../CustomerTable/CustomerTable";
 import EditCustomerModal from "../EditCustomerModal/EditCustomerModal";
-import './dashboard.css'
-import Modal from 'react-modal';
+import "./dashboard.css";
+import Modal from "react-modal";
+import { CircularProgressbar } from "react-circular-progressbar";
 
 // Define your CustomAlert component
 const CustomAlert = ({ message, onConfirm, onCancel }) => {
-   const customStyles = {
+  const customStyles = {
     content: {
-      width: '400px', 
-      height: '150px',
-      margin: 'auto', 
-      padding: '15px',
-      borderRadius: '10px',
-      border: '10px',
-      backgroundColor: '#0d2136',
-      color: 'white',
+      width: "400px",
+      height: "150px",
+      margin: "auto",
+      padding: "15px",
+      borderRadius: "10px",
+      border: "10px",
+      backgroundColor: "#0d2136",
+      color: "white",
     },
   };
   return (
-    <Modal
-      isOpen={true}
-      contentLabel="Custom Alert"
-      style={customStyles}
-    >
+    <Modal isOpen={true} contentLabel="Custom Alert" style={customStyles}>
       <div>
         <h2 className="alert-heading">Confirm delete</h2>
         <p>{message}</p>
-            <button className="confirm-alert-button" onClick={onConfirm}>Confirm</button>
-            <button className="cancel-alert-button" onClick={onCancel}>Cancel</button>
+        <button className="confirm-alert-button" onClick={onConfirm}>
+          Confirm
+        </button>
+        <button className="cancel-alert-button" onClick={onCancel}>
+          Cancel
+        </button>
       </div>
     </Modal>
   );
 };
-
 
 // Functional component for the Dashboard page
 const Dashboard = () => {
@@ -93,6 +93,26 @@ const Dashboard = () => {
       setLoading(false);
     }
   };
+
+  // Function to count the number of customers in progress, completed, and total customers
+  const countCustomers = () => {
+    const inProgressCount = customers.filter(
+      (customer) => customer.status === "In Progress"
+    ).length;
+    const completedCount = customers.filter(
+      (customer) => customer.status === "Completed"
+    ).length;
+    const totalCustomers = customers.length;
+    return { inProgressCount, completedCount, totalCustomers };
+  };
+
+  // Function to calculate the percentage for circular progress bars
+  const calculatePercentage = (count, total) => {
+    return total === 0 ? 0 : (count / total) * 100;
+  };
+
+  // Calculate counts and total customers
+  const { inProgressCount, completedCount, totalCustomers } = countCustomers();
 
   // Function to open the custom alert
   const openCustomAlert = (customer) => {
@@ -164,20 +184,27 @@ const Dashboard = () => {
     openEditCustomerModal(customerData);
   };
 
- // JSX for rendering the Dashboard component
-return (
-  <div className="container">
-    <h1 className="heading">Welcome to Piles Clinic Dashboard</h1>
-    <button className="logout-btn" onClick={handleLogout}>Logout</button>
-    {loading ? (
-      <div className="overlay">
-        <LoadingSpinner />
-      </div>
-    ) : (
-      // Display the CustomerTable component with customer data and onDelete function
-      <CustomerTable data={customers} onDelete={handleDelete} onEdit={onEdit} onPaymentAdded={fetchCustomers} />
-    )}
-     {isCustomAlertOpen && (
+  // JSX for rendering the Dashboard component
+  return (
+    <div className="container">
+      <h1 className="heading">Welcome to Piles Clinic Dashboard</h1>
+      <button className="logout-btn" onClick={handleLogout}>
+        Logout
+      </button>
+      {loading ? (
+        <div className="overlay">
+          <LoadingSpinner />
+        </div>
+      ) : (
+        // Display the CustomerTable component with customer data and onDelete function
+        <CustomerTable
+          data={customers}
+          onDelete={handleDelete}
+          onEdit={onEdit}
+          onPaymentAdded={fetchCustomers}
+        />
+      )}
+      {isCustomAlertOpen && (
         <CustomAlert
           message={`Are you sure want to delete customer ${customerToDelete.customerID}?`}
           onConfirm={() => {
@@ -187,27 +214,95 @@ return (
           onCancel={closeCustomAlert}
         />
       )}
-    <button className="add-customer-btn" onClick={openAddCustomerModal}>Add Customer</button>
-    <AddCustomerModal
-      isOpen={isAddCustomerModalOpen}
-      onRequestClose={closeAddCustomerModal}
-      isMobileUnique={isMobileUnique}
-      setIsMobileUnique={setIsMobileUnique}
-    />
-    <EditCustomerModal
-      isOpen={isEditCustomerModalOpen}
-      onRequestClose={closeEditCustomerModal}
-      initialData={editCustomerData}
-      isMobileUnique={isMobileUnique}
-      setIsMobileUnique={setIsMobileUnique}
-      onEditSuccess={() => {
-        closeEditCustomerModal();
-        fetchCustomers();
-      }}
-    />
-  </div>
-);
 
+      <div className="progress-bar-container1">
+        <CircularProgressbar
+          className="circle"
+          value={calculatePercentage(inProgressCount, totalCustomers)}
+          text={`${Math.round(
+            calculatePercentage(inProgressCount, totalCustomers)
+          )}%`}
+          styles={{
+            path: {
+              stroke: "orange",
+              strokeWidth: 9, // Adjust the width of the colored part
+            },
+            trail: {
+              stroke: "black", // Background color
+              strokeWidth: 9, // Adjust the width of the background
+            },
+            text: {
+              fill: "#fff",
+              fontSize: "25px",
+              dominantBaseline: "middle", // Vertical centering
+              textAnchor: "middle", // Horizontal centering
+            },
+          }}
+          strokeWidth={10}
+        />
+        <div>
+          <p className="count-text">In Progress </p>
+          <p className="inprogress-count">
+            {inProgressCount} / {totalCustomers}
+          </p>
+        </div>
+      </div>
+
+      <div className="progress-bar-container2">
+          <CircularProgressbar
+            className="circle"
+            value={calculatePercentage(completedCount, totalCustomers)}
+            text={`${Math.round(
+              calculatePercentage(completedCount, totalCustomers)
+            )}%`}
+            styles={{
+              path: {
+                stroke: "greenyellow",
+                strokeWidth: 9, // Adjust the width of the colored part
+              },
+              trail: {
+                stroke: "black", // Background color
+                strokeWidth: 9, // Adjust the width of the background
+              },
+              text: {
+                fill: "#fff",
+                fontSize: "25px",
+                dominantBaseline: "middle", // Vertical centering
+                textAnchor: "middle", // Horizontal centering
+              },
+            }}
+            strokeWidth={10}
+          />
+          <div>
+            <p className="count-text">Completed </p>
+            <p className="completed-count">
+              {completedCount} / {totalCustomers}
+            </p>
+          </div>
+      </div>
+
+      <button className="add-customer-btn" onClick={openAddCustomerModal}>
+        Add Customer
+      </button>
+      <AddCustomerModal
+        isOpen={isAddCustomerModalOpen}
+        onRequestClose={closeAddCustomerModal}
+        isMobileUnique={isMobileUnique}
+        setIsMobileUnique={setIsMobileUnique}
+      />
+      <EditCustomerModal
+        isOpen={isEditCustomerModalOpen}
+        onRequestClose={closeEditCustomerModal}
+        initialData={editCustomerData}
+        isMobileUnique={isMobileUnique}
+        setIsMobileUnique={setIsMobileUnique}
+        onEditSuccess={() => {
+          closeEditCustomerModal();
+          fetchCustomers();
+        }}
+      />
+    </div>
+  );
 };
 
 export default Dashboard;
