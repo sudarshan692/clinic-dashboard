@@ -19,18 +19,22 @@
   margin-top: 25px;
   padding-left: 30px;
   padding-right: 30px;
+  
 }
 .details ul {
-  margin-top: -10px;
+  margin-top: -5px;
   width: 700px;
   padding: 0;
-  margin-left: 50px;
-  border: 1px solid #3f51b5;
   overflow-y: auto; 
   max-height: 100px; 
+  background-color: #162c46;
+  border-radius: 6px;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
 }
 li{
   padding-left: 20px;
+  padding-top: 3px;
+  padding-bottom: 3px;
 }
 
 .details .payment-list-container {
@@ -51,4 +55,61 @@ strong {
     border: 0;
     border-radius: 6px;
     color: white;
+}
+.progress-bar-container4 {
+  background-color: #162c46;
+  width: 220px;
+  height: 50px;
+  border-radius: 6px;
+  padding: 8px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform: translate(235%, 87%);
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+}
+.progress-bar-container5 {
+  margin-top: 75px;
+  background-color: #162c46;
+  width: 220px;
+  height: 50px;
+  border-radius: 6px;
+  padding: 8px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform: translate(235%, 87%);
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+}
+.circle{
+  height: 50px;
+  align-items: center;
+  margin-left: 5px;
+
+}
+.income-received{
+  margin-top: -9px;
+  margin-left: 65px;
+  color: #16FF00;
+  font-size: 12px;
+
+}
+.income-pending{
+  margin-top: -9px;
+  margin-left: 65px;
+  color: #FF4500;
+  font-size: 12px;
+}
+.total-income{
+  margin-top: -9px;
+  margin-left: 65px;
+  color: #2FA4FF;
+  font-size: 12px;
+}
+.count-text{
+  font-size: 12px;
+  color: rgb(211, 227, 253);
+  margin-top: -49px;
+  margin-left: 65px;
+  font-weight: bold;
 }

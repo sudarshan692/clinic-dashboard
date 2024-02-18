@@ -4,7 +4,6 @@ import { db } from '../shared/firebase';
 import '../EditCustomerModal/editCustomerModal.css';
 
 const EditCustomerModal = ({ isOpen, onRequestClose, initialData, isMobileUnique, setIsMobileUnique, onEditSuccess }) => {
-  // State variable to manage the edited customer data
   const [editedData, setEditedData] = useState({
     name: '',
     mobile: '',
@@ -12,12 +11,12 @@ const EditCustomerModal = ({ isOpen, onRequestClose, initialData, isMobileUnique
     status: '',
   });
 
-  // Effect to update editedData when initialData changes
+  const [errorMessage, setErrorMessage] = useState('');
+
   useEffect(() => {
     setEditedData({ ...initialData });
   }, [initialData]);
 
-  // Handle input changes in the edit modal
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setEditedData((prevData) => ({
@@ -28,26 +27,37 @@ const EditCustomerModal = ({ isOpen, onRequestClose, initialData, isMobileUnique
 
   const handleSave = async () => {
     try {
-      // Check if the mobile number is unique
       const isUnique = await checkMobileNumberUnique(editedData.mobile, initialData.uniqueID);
   
       if (isUnique) {
-        // Validate that End Date is greater than Start Date
         if (editedData.startDate && editedData.endDate && new Date(editedData.endDate) <= new Date(editedData.startDate)) {
-          alert("End Date must be greater than Start Date");
+          setErrorMessage('End Date must be greater than Start Date');
           return;
         }
   
-        // Build the updated data object
         const updatedData = {
           ...editedData,
-          endDate: editedData.endDate || '', // Use editedData.endDate if provided, otherwise keep it empty
-          status: editedData.endDate ? 'Completed' : 'In Progress', // Set status based on the presence of endDate
+          endDate: editedData.endDate || '',
+          status: editedData.endDate ? 'Completed' : 'In Progress',
         };
   
-        // Update the document in the database
+        // Calculate total received amount for the specific customer
+        const paymentsSnapshot = await db.collection('customers').doc(initialData.uniqueID).get();
+        const payments = paymentsSnapshot.data()?.payments || [];
+        
+        const totalReceivedAmount = payments.reduce((acc, payment) => acc + (parseFloat(payment.amount) || 0), 0);
+        const initialTotalCost = parseFloat(initialData.totalCost);
+  
+        console.log('totalReceivedAmount:', totalReceivedAmount);
+        console.log('initialTotalCost:', initialTotalCost);
+  
+        if (editedData.endDate && totalReceivedAmount !== initialTotalCost) {
+          setErrorMessage('Cannot enter End Date since total received amount is not equal to total cost');
+          return;
+        }
+  
         await db.collection('customers').doc(initialData.uniqueID).update(updatedData);
-        onEditSuccess(); // Callback to handle success and refetch data
+        onEditSuccess();
       } else {
         setIsMobileUnique(false);
       }
@@ -55,8 +65,11 @@ const EditCustomerModal = ({ isOpen, onRequestClose, initialData, isMobileUnique
       console.error('Error saving edited customer data:', error.message);
     }
   };
+  
+  
+  
+  
 
-  // Function to check if the mobile number is unique for the edited customer
   const checkMobileNumberUnique = async (mobileNumber, currentUniqueID) => {
     try {
       const snapshot = await db
@@ -72,17 +85,23 @@ const EditCustomerModal = ({ isOpen, onRequestClose, initialData, isMobileUnique
     }
   };
 
-  // Custom styles for the modal
+  useEffect(() => {
+    // Reset error message when the modal is closed
+    if (!isOpen) {
+      setErrorMessage('');
+    }
+  }, [isOpen]);
+  
+
   const customStyles = {
     content: {
-      width: '1100px', // Set your custom width here
-      height: '600px', // Set your custom height here
-      margin: 'auto', // Center the modal
-      padding: '0', 
-      overflow: 'auto', // Allow scrolling if content overflows
+      width: '1100px',
+      height: '600px',
+      margin: 'auto',
+      padding: '0',
+      overflow: 'auto',
     },
   };
-
   // JSX for rendering the EditCustomerModal component
   return (
     <Modal
@@ -137,6 +156,11 @@ const EditCustomerModal = ({ isOpen, onRequestClose, initialData, isMobileUnique
       <div>
         <button  class="right-bottom-button-save" onClick={handleSave}>Save</button>
       </div>
+      {errorMessage && (
+          <div className='error-message1'>
+            {errorMessage}
+          </div>
+        )}
       </div>
     </Modal>
   );

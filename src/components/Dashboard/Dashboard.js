@@ -50,6 +50,8 @@ const Dashboard = () => {
   const [isMobileUnique, setIsMobileUnique] = useState(true);
   const [isCustomAlertOpen, setIsCustomAlertOpen] = useState(false);
   const [customerToDelete, setCustomerToDelete] = useState(null);
+  const [totalCost, setTotalCost] = useState(0);
+  const [totalAmountReceived, setTotalAmountReceived] = useState(0);
 
   // Function to fetch customer data from the Firestore database
   const fetchCustomers = async () => {
@@ -62,6 +64,27 @@ const Dashboard = () => {
         uniqueID: doc.id,
         ...doc.data(),
       }));
+
+      // Step 2: Calculate and set the total cost
+      const totalCost = customerData.reduce(
+        (acc, customer) => acc + Number(customer.totalCost),
+        0
+      );
+      setTotalCost(totalCost);
+
+      // Calculate the total amount received from payments for all customers
+      const totalAmountReceived = customerData.reduce((acc, customer) => {
+        const customerPaymentsTotal = customer.payments
+          ? customer.payments.reduce(
+              (paymentAcc, payment) => paymentAcc + payment.amount,
+              0
+            )
+          : 0;
+        return acc + customerPaymentsTotal;
+      }, 0);
+
+      setTotalAmountReceived(totalAmountReceived);
+
       // Set the customer data state with the retrieved data
       setCustomers(customerData);
     } catch (error) {
@@ -69,6 +92,15 @@ const Dashboard = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  // Function to format a number as Indian Rupees (INR)
+  const formatAsIndianRupees = (amount) => {
+    return new Intl.NumberFormat("en-IN", {
+      style: "currency",
+      currency: "INR",
+      minimumFractionDigits: 2,
+    }).format(amount);
   };
 
   // useEffect hook to fetch customer data when the modal is opened or closed
@@ -113,6 +145,25 @@ const Dashboard = () => {
 
   // Calculate counts and total customers
   const { inProgressCount, completedCount, totalCustomers } = countCustomers();
+
+  // Function to calculate the pending amount for all customers
+  const calculatePendingAmount = () => {
+    // Calculate the total pending amount for all customers
+    const totalPendingAmount = customers.reduce((acc, customer) => {
+      const receivedAmount = customer.payments
+        ? customer.payments.reduce(
+            (paymentAcc, payment) => paymentAcc + payment.amount,
+            0
+          )
+        : 0;
+      const pendingAmount = Math.max(customer.totalCost - receivedAmount, 0);
+      return acc + pendingAmount;
+    }, 0);
+    return totalPendingAmount;
+  };
+
+  // Calculate total pending amount for all customers
+  const totalPendingAmount = calculatePendingAmount();
 
   // Function to open the custom alert
   const openCustomAlert = (customer) => {
@@ -249,36 +300,106 @@ const Dashboard = () => {
       </div>
 
       <div className="progress-bar-container2">
-          <CircularProgressbar
-            className="circle"
-            value={calculatePercentage(completedCount, totalCustomers)}
-            text={`${Math.round(
-              calculatePercentage(completedCount, totalCustomers)
-            )}%`}
-            styles={{
-              path: {
-                stroke: "greenyellow",
-                strokeWidth: 9, // Adjust the width of the colored part
-              },
-              trail: {
-                stroke: "black", // Background color
-                strokeWidth: 9, // Adjust the width of the background
-              },
-              text: {
-                fill: "#fff",
-                fontSize: "25px",
-                dominantBaseline: "middle", // Vertical centering
-                textAnchor: "middle", // Horizontal centering
-              },
-            }}
-            strokeWidth={10}
-          />
-          <div>
-            <p className="count-text">Completed </p>
-            <p className="completed-count">
-              {completedCount} / {totalCustomers}
-            </p>
-          </div>
+        <CircularProgressbar
+          className="circle"
+          value={calculatePercentage(completedCount, totalCustomers)}
+          text={`${Math.round(
+            calculatePercentage(completedCount, totalCustomers)
+          )}%`}
+          styles={{
+            path: {
+              stroke: "#16FF00",
+              strokeWidth: 9, // Adjust the width of the colored part
+            },
+            trail: {
+              stroke: "black", // Background color
+              strokeWidth: 9, // Adjust the width of the background
+            },
+            text: {
+              fill: "#fff",
+              fontSize: "25px",
+              dominantBaseline: "middle", // Vertical centering
+              textAnchor: "middle", // Horizontal centering
+            },
+          }}
+          strokeWidth={10}
+        />
+        <div>
+          <p className="count-text">Completed </p>
+          <p className="completed-count">
+            {completedCount} / {totalCustomers}
+          </p>
+        </div>
+      </div>
+
+      <div className="progress-bar-container3">
+        <CircularProgressbar
+          className="circle"
+          value={calculatePercentage(totalAmountReceived, totalCost)}
+          text={`${Math.round(
+            calculatePercentage(totalAmountReceived, totalCost)
+          )}%`}
+          styles={{
+            path: {
+              stroke: "#16FF00",
+              strokeWidth: 9, // Adjust the width of the colored part
+            },
+            trail: {
+              stroke: "black", // Background color
+              strokeWidth: 9, // Adjust the width of the background
+            },
+            text: {
+              fill: "#fff",
+              fontSize: "25px",
+              dominantBaseline: "middle", // Vertical centering
+              textAnchor: "middle", // Horizontal centering
+            },
+          }}
+          strokeWidth={10}
+        />
+        <div>
+          <p className="count-text">Total Income Received </p>
+          <p className="total-received-income">
+            R: {formatAsIndianRupees(totalAmountReceived)}
+          </p>
+          <p className="total-income">T: {formatAsIndianRupees(totalCost)}</p>
+        </div>
+      </div>
+
+      <div className="progress-bar-container6">
+        <CircularProgressbar
+          className="circle"
+          value={calculatePercentage(totalPendingAmount, totalCost)}
+          text={`${Math.round(
+            calculatePercentage(totalPendingAmount, totalCost)
+          )}%`}
+          styles={{
+            path: {
+              stroke: "#FF4500",
+              strokeWidth: 9, // Adjust the width of the colored part
+            },
+            trail: {
+              stroke: "black", // Background color
+              strokeWidth: 9, // Adjust the width of the background
+            },
+            text: {
+              fill: "#fff",
+              fontSize: "25px",
+              dominantBaseline: "middle", // Vertical centering
+              textAnchor: "middle", // Horizontal centering
+            },
+          }}
+          strokeWidth={10}
+        />
+        <div>
+          <p className="count-text">Total Pending Amount </p>
+          <p className="total-income-pending">
+            P: {formatAsIndianRupees(totalPendingAmount)}
+          </p>
+          <p className="total-income">
+            T: {formatAsIndianRupees(totalCost)}
+          </p>
+        </div>
       </div>
 
       <button className="add-customer-btn" onClick={openAddCustomerModal}>

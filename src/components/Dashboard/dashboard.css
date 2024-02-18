@@ -56,6 +56,7 @@
   top: 0;
   left: 0;
   transform: translate(6%, 87%);
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
 }
 .progress-bar-container2 {
   background-color: #162c46;
@@ -67,6 +68,31 @@
   top: 0;
   left: 0;
   transform: translate(110%, 87%);
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+}
+.progress-bar-container3 {
+  background-color: #162c46;
+  width: 220px;
+  height: 50px;
+  border-radius: 6px;
+  padding: 8px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform: translate(151%, 87%);
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+}
+.progress-bar-container6 {
+  background-color: #162c46;
+  width: 220px;
+  height: 50px;
+  border-radius: 6px;
+  padding: 8px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform: translate(254%, 87%);
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
 }
 .circle{
   height: 50px;
@@ -89,5 +115,25 @@
 .completed-count{
   margin-top: -5px;
   margin-left: 65px;
-  color: greenyellow;
+  color: #16FF00;
+}
+.total-received-income{
+  margin-top: -9px;
+  margin-left: 65px;
+  color: #16FF00;
+  font-size: 12px;
+
+}
+.total-income{
+  margin-top: -9px;
+  margin-left: 65px;
+  color: #2FA4FF;
+  font-size: 12px;
+}
+.total-income-pending{
+  margin-top: -9px;
+  margin-left: 65px;
+  color: #FF4500;
+  font-size: 12px;
+
 }

@@ -79,3 +79,10 @@
       border-radius: 6px;
       color: white;
     }
+.error-message1{
+  margin-top: 60px;
+  color: red;
+  display: flex;
+  justify-content: center;
+
+}
