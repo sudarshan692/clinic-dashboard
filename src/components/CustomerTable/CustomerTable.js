@@ -6,6 +6,14 @@ import inProgressImage from '../../assets/inProgress.png';
 import AddPaymentModal from "../AddPaymentModal/AddPaymentModal";
 import CustomerDetailsDialog from "../CustomerDetailsDialog/CustomerDetailsDialog"; 
 
+
+const CustomNoDataComponent = () => (
+  <div style={{ textAlign: "center", padding: "20px",  backgroundColor: "#162c46", color: "rgb(211, 227, 253)", width: '100%' }}>
+    There are no records to display.
+  </div>
+);
+
+
 const CustomerTable = ({ data, onDelete, onEdit, onPaymentAdded }) => {
   const [searchText, setSearchText] = useState('');
   const [isAddPaymentModalOpen, setIsAddPaymentModalOpen] = useState(false);
@@ -189,6 +197,7 @@ const CustomerTable = ({ data, onDelete, onEdit, onPaymentAdded }) => {
           defaultSortField="customerID"
           customStyles={customStyles}
           onRowClicked={handleRowClick}
+          noDataComponent={<CustomNoDataComponent />}
         />
          {/* Render the AddPaymentModal */}
       <AddPaymentModal

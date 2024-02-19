@@ -16,8 +16,6 @@ th:hover .sort-icon {
   .table{
     margin-left: 10px;
     margin-right: 10px;
-    border-top-left-radius: 5px;
-    border-top-right-radius: 5px;
   }
 
 .search-container {
