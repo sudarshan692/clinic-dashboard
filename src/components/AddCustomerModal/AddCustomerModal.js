@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Modal from 'react-modal';
-import { db } from './firebase'; // Assuming you have a 'db' instance from Firebase
+import { db } from '../shared/firebase'; // Assuming you have a 'db' instance from Firebase
 
 // Functional component for the Add Customer Modal
 const AddCustomerModal = ({ isOpen, onRequestClose, isMobileUnique, setIsMobileUnique }) => {
@@ -62,9 +62,10 @@ const AddCustomerModal = ({ isOpen, onRequestClose, isMobileUnique, setIsMobileU
   // Custom styles for the modal
   const customStyles = {
     content: {
-      width: '50%', // Set the desired width
-      height: '70%', // Set the desired height
-      margin: 'auto', // Center the modal horizontally
+      width: '1100px', // Set your custom width here
+      height: '600px', // Set your custom height here
+      margin: 'auto', // Center the modal
+      padding: '0', 
       overflow: 'auto', // Allow scrolling if content overflows
     },
   };
@@ -122,7 +123,6 @@ const handleSave = async () => {
     console.error('Error saving customer data:', error.message);
   }
 };
-
   
 
   return (
@@ -132,45 +132,51 @@ const handleSave = async () => {
       contentLabel="Add Customer Modal"
       style={customStyles} // Apply the custom styles
     >
-      <h2>Add Customer</h2>
-      <div>
-        <label>Customer ID:</label>
-        <span>{customerData.customerID}</span>
-      </div>
-      <div>
-        <label>Name:</label>
-        <input type="text" name="name" value={customerData.name} onChange={handleInputChange} />
-      </div>
-      <div>
-        <label>Mobile Number:</label>
-        <input type="text" name="mobile" value={customerData.mobile} onChange={handleInputChange} />
+      <div className='maincard'>
+      <h2  className='edit-customer-heading'>Add Customer</h2>
+      <p className='customerID'>CustomerID: {customerData.customerID}</p>
+
+      <div className='container1'>
+        <label className='all-label'>Name *
+        <input className='inputbox1' type="text" name="name" value={customerData.name} onChange={handleInputChange} />
+        </label>
+        <label  className='all-label'>Mobile Number *
+        <input className='inputbox1' type="text" name="mobile" value={customerData.mobile} onChange={handleInputChange} />
         {isMobileUnique ? null : (
         <div style={{ color: 'red' }}>Mobile number must be unique</div>
       )}     
+      </label>
+      </div>
+
+      <div className='container1'>
+        <label className='all-label'>Place *
+        <input className='inputbox1' type="text" name="place" value={customerData.place} onChange={handleInputChange} />
+        </label>
+        <label className='all-label'>Address *
+        <input className='inputbox1' type="text" name="address" value={customerData.address} onChange={handleInputChange} />
+        </label>
+      </div>
+
+      <div className='container1'>
+        <label className='all-label'>Age *
+        <input className='inputbox1' type="text" name="age" value={customerData.age} onChange={handleInputChange} />
+        </label>
+        <label className='all-label'>Total Cost *
+        <input className='inputbox1' type="text" name="totalCost" value={customerData.totalCost} onChange={handleInputChange} />
+        </label>
+      </div>
+
+      <div className='container1'>
+      <label className='all-label'>Start Date *
+        <input className='inputbox1'type="date" name="startDate" value={customerData.startDate} onChange={handleInputChange} />
+        </label>
       </div>
       <div>
-        <label>Place:</label>
-        <input type="text" name="place" value={customerData.place} onChange={handleInputChange} />
+        <button class="right-bottom-button-cancel" onClick={onRequestClose}>Cancel</button>
       </div>
       <div>
-        <label>Address:</label>
-        <input type="text" name="address" value={customerData.address} onChange={handleInputChange} />
+        <button  class="right-bottom-button-save" onClick={handleSave}>Save</button>
       </div>
-      <div>
-        <label>Age:</label>
-        <input type="text" name="age" value={customerData.age} onChange={handleInputChange} />
-      </div>
-      <div>
-        <label>Total Cost:</label>
-        <input type="text" name="totalCost" value={customerData.totalCost} onChange={handleInputChange} />
-      </div>
-      <div>
-        <label>Start Date:</label>
-        <input type="date" name="startDate" value={customerData.startDate} onChange={handleInputChange} />
-      </div>
-      <div>
-        <button onClick={handleSave}>Save</button>
-        <button onClick={onRequestClose}>Cancel</button>
       </div>
     </Modal>
   );

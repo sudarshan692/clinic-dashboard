@@ -3,13 +3,52 @@ import DataTable from "react-data-table-component";
 import './customerTable.css';
 import completedImage from '../../assets/completed.png';
 import inProgressImage from '../../assets/inProgress.png';
+import AddPaymentModal from "../AddPaymentModal/AddPaymentModal";
+import CustomerDetailsDialog from "../CustomerDetailsDialog/CustomerDetailsDialog"; 
 
-const CustomerTable = ({ data, onDelete, onEdit }) => {
+
+const CustomNoDataComponent = () => (
+  <div style={{ textAlign: "center", padding: "20px",  backgroundColor: "#162c46", color: "rgb(211, 227, 253)", width: '100%' }}>
+    There are no records to display.
+  </div>
+);
+
+
+const CustomerTable = ({ data, onDelete, onEdit, onPaymentAdded }) => {
   const [searchText, setSearchText] = useState('');
-
+  const [isAddPaymentModalOpen, setIsAddPaymentModalOpen] = useState(false);
+  const [selectedCustomer, setSelectedCustomer] = useState(null);
+  const [isCustomerDetailsDialogOpen, setIsCustomerDetailsDialogOpen] = useState(false);
+  const [selectedCustomerDetails, setSelectedCustomerDetails] = useState(null);
+ 
 
   const handleSearch = (e) => {
     setSearchText(e.target.value);
+  };
+
+  const handleAddPaymentClick = (customer) => {
+    setSelectedCustomer(customer);
+    setIsAddPaymentModalOpen(true);
+  };
+
+  const closeAddPaymentModal = () => {
+    setIsAddPaymentModalOpen(false);
+  };
+
+  
+  const handlePaymentAdded = () => {
+    // Optional: You can perform any action after a payment is added, e.g., refreshing data
+    onPaymentAdded();  
+  };
+
+  const handleRowClick = (row) => {
+    // Display customer details dialog on row click
+    setSelectedCustomerDetails(row);
+    setIsCustomerDetailsDialogOpen(true);
+  };
+
+  const closeCustomerDetailsDialog = () => {
+    setIsCustomerDetailsDialogOpen(false);
   };
 
   const filteredData = data.filter((item) =>
@@ -21,16 +60,15 @@ const CustomerTable = ({ data, onDelete, onEdit }) => {
 
   const columns = [
     { name: "Customer ID", selector: (row) => row.customerID, sortable: true },
-    { name: "Name",  selector: (row) => row.name, sortable: true },
-    { name: "Mobile Number", selector: (row) => row.mobile, sortable: true },
-    { name: "Place", selector: (row) => row.place, sortable: true },
-    { name: "Age", selector: (row) => row.age, sortable: true },
-    { name: "Total Cost", selector: (row) => row.totalCost, sortable: true },
-    { name: "Address", selector: (row) => row.address, sortable: true },
-    { name: "Start Date", selector: (row) => row.startDate, sortable: true },
+    { name: "Name",  selector: (row) => row.name || '-', sortable: true },
+    { name: "Mobile Number", selector: (row) => row.mobile || '-', sortable: true },
+    { name: "Place", selector: (row) => row.place || '-', sortable: true },
+    { name: "Age", selector: (row) => row.age || '-', sortable: true },
+    { name: "Total Cost", selector: (row) => row.totalCost || '-', sortable: true },
+    { name: "Address", selector: (row) => row.address || '-', sortable: true },
+    { name: "Start Date", selector: (row) => row.startDate || '-', sortable: true },
     { name: "End Date", selector: (row) => row.endDate || '-', sortable: true }, // Display 'N/A' if endDate is not available
-    {
-      name: "Status",
+    { name: "Status",
       cell: (row) => (
         <div style={{ display: "flex", alignItems: "center" }}>
           {row.endDate ? (
@@ -59,8 +97,7 @@ const CustomerTable = ({ data, onDelete, onEdit }) => {
         </div>
       ),
     },
-    {
-      name: "",
+    { name: "",
       cell: (row) => (
         <>
           <span
@@ -72,12 +109,20 @@ const CustomerTable = ({ data, onDelete, onEdit }) => {
           </span>
           <span
             className="material-icons"
-            style={{ cursor: "pointer" }}
+            style={{ cursor: "pointer", color: '#BE3144' }}
             onClick={() => onDelete(row.uniqueID)}
     
           >
             delete
           </span>
+          
+          <span
+        className="material-icons add-payment-button"
+        style={{ cursor: "pointer", color: 'orange' }}
+        onClick={() => handleAddPaymentClick(row)}
+      >
+        add_circle_outline
+      </span>
         </>
       ),
     },
@@ -102,17 +147,20 @@ const CustomerTable = ({ data, onDelete, onEdit }) => {
     rows: {
       style: {
         "&:nth-child(odd)": {
-          backgroundColor: "#e0e0e0",
+          backgroundColor: "#0d2136",
+          color: 'white'
         },
         "&:nth-child(even)": {
-          backgroundColor: "#f2f2f2",
+          backgroundColor: '#162c46',
+          color: 'white'
         },
       },
     },
     pagination: {
       style: {
-        backgroundColor: "#ecf0f1", // Pagination background color
-        color: "#34495e", // Pagination text color
+        backgroundColor: '#3f51b5',
+        // backgroundColor: "#ecf0f1", 
+        color: "white", // Pagination text color
         display: "flex",
         justifyContent: "center",
       },
@@ -148,7 +196,21 @@ const CustomerTable = ({ data, onDelete, onEdit }) => {
           sortIcon={<i className="material-icons">arrow_upward</i>}
           defaultSortField="customerID"
           customStyles={customStyles}
+          onRowClicked={handleRowClick}
+          noDataComponent={<CustomNoDataComponent />}
         />
+         {/* Render the AddPaymentModal */}
+      <AddPaymentModal
+        isOpen={isAddPaymentModalOpen}
+        onRequestClose={closeAddPaymentModal}
+        selectedCustomer={selectedCustomer}
+        onPaymentAdded={handlePaymentAdded}
+      />
+       <CustomerDetailsDialog
+        isOpen={isCustomerDetailsDialogOpen}
+        onRequestClose={closeCustomerDetailsDialog}
+        customerDetails={selectedCustomerDetails}
+      />
       </div>
     </div>
   );

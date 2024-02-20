@@ -2,10 +2,43 @@ import React, { useState, useEffect } from "react";
 import { auth, db } from "../shared/firebase";
 import { useHistory } from "react-router-dom";
 import LoadingSpinner from "../shared/LoadingSpinner";
-import AddCustomerModal from "../shared/AddCustomerModel";
+import AddCustomerModal from "../AddCustomerModal/AddCustomerModal";
 import CustomerTable from "../CustomerTable/CustomerTable";
-import EditCustomerModal from "../shared/EditCustomerModal";
-import './dashboard.css'
+import EditCustomerModal from "../EditCustomerModal/EditCustomerModal";
+import "./dashboard.css";
+import Modal from "react-modal";
+import { CircularProgressbar } from "react-circular-progressbar";
+
+// Define your CustomAlert component
+const CustomAlert = ({ message, onConfirm, onCancel }) => {
+  const customStyles = {
+    content: {
+      width: "400px",
+      height: "150px",
+      margin: "auto",
+      padding: "15px",
+      borderRadius: "10px",
+      border: "10px",
+      backgroundColor: "#0d2136",
+      color: "white",
+    },
+  };
+  return (
+    <Modal isOpen={true} contentLabel="Custom Alert" style={customStyles}>
+      <div>
+        <h2 className="alert-heading">Confirm delete</h2>
+        <p>{message}</p>
+        <button className="confirm-alert-button" onClick={onConfirm}>
+          Confirm
+        </button>
+        <button className="cancel-alert-button" onClick={onCancel}>
+          Cancel
+        </button>
+      </div>
+    </Modal>
+  );
+};
+
 // Functional component for the Dashboard page
 const Dashboard = () => {
   const history = useHistory();
@@ -15,6 +48,10 @@ const Dashboard = () => {
   const [isEditCustomerModalOpen, setIsEditCustomerModalOpen] = useState(false);
   const [editCustomerData, setEditCustomerData] = useState(null);
   const [isMobileUnique, setIsMobileUnique] = useState(true);
+  const [isCustomAlertOpen, setIsCustomAlertOpen] = useState(false);
+  const [customerToDelete, setCustomerToDelete] = useState(null);
+  const [totalCost, setTotalCost] = useState(0);
+  const [totalAmountReceived, setTotalAmountReceived] = useState(0);
 
   // Function to fetch customer data from the Firestore database
   const fetchCustomers = async () => {
@@ -27,6 +64,27 @@ const Dashboard = () => {
         uniqueID: doc.id,
         ...doc.data(),
       }));
+
+      // Step 2: Calculate and set the total cost
+      const totalCost = customerData.reduce(
+        (acc, customer) => acc + Number(customer.totalCost),
+        0
+      );
+      setTotalCost(totalCost);
+
+      // Calculate the total amount received from payments for all customers
+      const totalAmountReceived = customerData.reduce((acc, customer) => {
+        const customerPaymentsTotal = customer.payments
+          ? customer.payments.reduce(
+              (paymentAcc, payment) => paymentAcc + payment.amount,
+              0
+            )
+          : 0;
+        return acc + customerPaymentsTotal;
+      }, 0);
+
+      setTotalAmountReceived(totalAmountReceived);
+
       // Set the customer data state with the retrieved data
       setCustomers(customerData);
     } catch (error) {
@@ -34,6 +92,15 @@ const Dashboard = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  // Function to format a number as Indian Rupees (INR)
+  const formatAsIndianRupees = (amount) => {
+    return new Intl.NumberFormat("en-IN", {
+      style: "currency",
+      currency: "INR",
+      minimumFractionDigits: 2,
+    }).format(amount);
   };
 
   // useEffect hook to fetch customer data when the modal is opened or closed
@@ -59,21 +126,68 @@ const Dashboard = () => {
     }
   };
 
+  // Function to count the number of customers in progress, completed, and total customers
+  const countCustomers = () => {
+    const inProgressCount = customers.filter(
+      (customer) => customer.status === "In Progress"
+    ).length;
+    const completedCount = customers.filter(
+      (customer) => customer.status === "Completed"
+    ).length;
+    const totalCustomers = customers.length;
+    return { inProgressCount, completedCount, totalCustomers };
+  };
+
+  // Function to calculate the percentage for circular progress bars
+  const calculatePercentage = (count, total) => {
+    return total === 0 ? 0 : (count / total) * 100;
+  };
+
+  // Calculate counts and total customers
+  const { inProgressCount, completedCount, totalCustomers } = countCustomers();
+
+  // Function to calculate the pending amount for all customers
+  const calculatePendingAmount = () => {
+    // Calculate the total pending amount for all customers
+    const totalPendingAmount = customers.reduce((acc, customer) => {
+      const receivedAmount = customer.payments
+        ? customer.payments.reduce(
+            (paymentAcc, payment) => paymentAcc + payment.amount,
+            0
+          )
+        : 0;
+      const pendingAmount = Math.max(customer.totalCost - receivedAmount, 0);
+      return acc + pendingAmount;
+    }, 0);
+    return totalPendingAmount;
+  };
+
+  // Calculate total pending amount for all customers
+  const totalPendingAmount = calculatePendingAmount();
+
+  // Function to open the custom alert
+  const openCustomAlert = (customer) => {
+    setCustomerToDelete(customer);
+    setIsCustomAlertOpen(true);
+  };
+
+  // Function to close the custom alert
+  const closeCustomAlert = () => {
+    setIsCustomAlertOpen(false);
+    setCustomerToDelete(null);
+  };
+
+  // Updated handleDelete function to use custom alert
+  const handleDelete = (uniqueID) => {
+    const customer = customers.find((c) => c.uniqueID === uniqueID);
+    if (customer) {
+      openCustomAlert(customer);
+    }
+  };
+
   // Function to open the Add Customer modal
   const openAddCustomerModal = () => {
     setIsAddCustomerModalOpen(true);
-  };
-
-  // Function to handle the deletion of a customer
-  const handleDelete = (uniqueID) => {
-    // Show alert for confirmation
-    const userConfirmed = window.confirm(
-      "Are you sure you want to delete this customer?"
-    );
-    // If user confirmed, proceed with deletion
-    if (userConfirmed) {
-      deleteCustomer(uniqueID); // Pass uniqueID to the deleteCustomer function
-    }
   };
 
   // Function to open the Edit Customer modal and set the current customer data
@@ -121,40 +235,195 @@ const Dashboard = () => {
     openEditCustomerModal(customerData);
   };
 
- // JSX for rendering the Dashboard component
-return (
-  <div className="container">
-    <h1 className="heading">Welcome to Piles Clinic Dashboard</h1>
-    <button className="logout-btn" onClick={handleLogout}>Logout</button>
-    {loading ? (
-      <div className="overlay">
-        <LoadingSpinner />
-      </div>
-    ) : (
-      // Display the CustomerTable component with customer data and onDelete function
-      <CustomerTable data={customers} onDelete={handleDelete} onEdit={onEdit} />
-    )}
-    <button className="add-customer-btn" onClick={openAddCustomerModal}>Add Customer</button>
-    <AddCustomerModal
-      isOpen={isAddCustomerModalOpen}
-      onRequestClose={closeAddCustomerModal}
-      isMobileUnique={isMobileUnique}
-      setIsMobileUnique={setIsMobileUnique}
-    />
-    <EditCustomerModal
-      isOpen={isEditCustomerModalOpen}
-      onRequestClose={closeEditCustomerModal}
-      initialData={editCustomerData}
-      isMobileUnique={isMobileUnique}
-      setIsMobileUnique={setIsMobileUnique}
-      onEditSuccess={() => {
-        closeEditCustomerModal();
-        fetchCustomers();
-      }}
-    />
-  </div>
-);
+  // JSX for rendering the Dashboard component
+  return (
+    <div className="container">
+      <h1 className="heading">Welcome to Piles Clinic Dashboard</h1>
+      <button className="logout-btn" onClick={handleLogout}>
+        Logout
+      </button>
+      {loading ? (
+        <div className="overlay">
+          <LoadingSpinner />
+        </div>
+      ) : (
+        // Display the CustomerTable component with customer data and onDelete function
+        <CustomerTable
+          data={customers}
+          onDelete={handleDelete}
+          onEdit={onEdit}
+          onPaymentAdded={fetchCustomers}
+        />
+      )}
+      {isCustomAlertOpen && (
+        <CustomAlert
+          message={`Are you sure want to delete customer ${customerToDelete.customerID}?`}
+          onConfirm={() => {
+            deleteCustomer(customerToDelete.uniqueID);
+            closeCustomAlert();
+          }}
+          onCancel={closeCustomAlert}
+        />
+      )}
 
+      <div className="progress-bar-container1">
+        <CircularProgressbar
+          className="circle"
+          value={calculatePercentage(inProgressCount, totalCustomers)}
+          text={`${Math.round(
+            calculatePercentage(inProgressCount, totalCustomers)
+          )}%`}
+          styles={{
+            path: {
+              stroke: "orange",
+              strokeWidth: 9, // Adjust the width of the colored part
+            },
+            trail: {
+              stroke: "black", // Background color
+              strokeWidth: 9, // Adjust the width of the background
+            },
+            text: {
+              fill: "#fff",
+              fontSize: "25px",
+              dominantBaseline: "middle", // Vertical centering
+              textAnchor: "middle", // Horizontal centering
+            },
+          }}
+          strokeWidth={10}
+        />
+        <div>
+          <p className="count-text">In Progress </p>
+          <p className="inprogress-count">
+            {inProgressCount} / {totalCustomers}
+          </p>
+        </div>
+      </div>
+
+      <div className="progress-bar-container2">
+        <CircularProgressbar
+          className="circle"
+          value={calculatePercentage(completedCount, totalCustomers)}
+          text={`${Math.round(
+            calculatePercentage(completedCount, totalCustomers)
+          )}%`}
+          styles={{
+            path: {
+              stroke: "#16FF00",
+              strokeWidth: 9, // Adjust the width of the colored part
+            },
+            trail: {
+              stroke: "black", // Background color
+              strokeWidth: 9, // Adjust the width of the background
+            },
+            text: {
+              fill: "#fff",
+              fontSize: "25px",
+              dominantBaseline: "middle", // Vertical centering
+              textAnchor: "middle", // Horizontal centering
+            },
+          }}
+          strokeWidth={10}
+        />
+        <div>
+          <p className="count-text">Completed </p>
+          <p className="completed-count">
+            {completedCount} / {totalCustomers}
+          </p>
+        </div>
+      </div>
+
+      <div className="progress-bar-container3">
+        <CircularProgressbar
+          className="circle"
+          value={calculatePercentage(totalAmountReceived, totalCost)}
+          text={`${Math.round(
+            calculatePercentage(totalAmountReceived, totalCost)
+          )}%`}
+          styles={{
+            path: {
+              stroke: "#16FF00",
+              strokeWidth: 9, // Adjust the width of the colored part
+            },
+            trail: {
+              stroke: "black", // Background color
+              strokeWidth: 9, // Adjust the width of the background
+            },
+            text: {
+              fill: "#fff",
+              fontSize: "25px",
+              dominantBaseline: "middle", // Vertical centering
+              textAnchor: "middle", // Horizontal centering
+            },
+          }}
+          strokeWidth={10}
+        />
+        <div>
+          <p className="count-text">Total Income Received </p>
+          <p className="total-received-income">
+            R: {formatAsIndianRupees(totalAmountReceived)}
+          </p>
+          <p className="total-income">T: {formatAsIndianRupees(totalCost)}</p>
+        </div>
+      </div>
+
+      <div className="progress-bar-container6">
+        <CircularProgressbar
+          className="circle"
+          value={calculatePercentage(totalPendingAmount, totalCost)}
+          text={`${Math.round(
+            calculatePercentage(totalPendingAmount, totalCost)
+          )}%`}
+          styles={{
+            path: {
+              stroke: "#FF4500",
+              strokeWidth: 9, // Adjust the width of the colored part
+            },
+            trail: {
+              stroke: "black", // Background color
+              strokeWidth: 9, // Adjust the width of the background
+            },
+            text: {
+              fill: "#fff",
+              fontSize: "25px",
+              dominantBaseline: "middle", // Vertical centering
+              textAnchor: "middle", // Horizontal centering
+            },
+          }}
+          strokeWidth={10}
+        />
+        <div>
+          <p className="count-text">Total Pending Amount </p>
+          <p className="total-income-pending">
+            P: {formatAsIndianRupees(totalPendingAmount)}
+          </p>
+          <p className="total-income">
+            T: {formatAsIndianRupees(totalCost)}
+          </p>
+        </div>
+      </div>
+
+      <button className="add-customer-btn" onClick={openAddCustomerModal}>
+        Add Customer
+      </button>
+      <AddCustomerModal
+        isOpen={isAddCustomerModalOpen}
+        onRequestClose={closeAddCustomerModal}
+        isMobileUnique={isMobileUnique}
+        setIsMobileUnique={setIsMobileUnique}
+      />
+      <EditCustomerModal
+        isOpen={isEditCustomerModalOpen}
+        onRequestClose={closeEditCustomerModal}
+        initialData={editCustomerData}
+        isMobileUnique={isMobileUnique}
+        setIsMobileUnique={setIsMobileUnique}
+        onEditSuccess={() => {
+          closeEditCustomerModal();
+          fetchCustomers();
+        }}
+      />
+    </div>
+  );
 };
 
 export default Dashboard;
