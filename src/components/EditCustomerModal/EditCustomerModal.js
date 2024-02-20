@@ -57,7 +57,7 @@ const EditCustomerModal = ({ isOpen, onRequestClose, initialData, isMobileUnique
         console.log('editedTotalCost:', editedTotalCost);
   
         if (editedData.endDate && editedTotalCost !== totalReceivedAmount) {
-          setErrorMessage('Cannot enter End Date since total received amount is not equal to total cost');
+          setErrorMessage('Cannot enter End Date since Customer has not done full payment');
           return;
         }
   
