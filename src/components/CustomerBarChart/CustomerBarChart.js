@@ -66,15 +66,16 @@ const CustomerBarChart = () => {
 
   useEffect(() => {
     // Fetch data for the initial current year
+    console.log("Fetching customers from the database...")
     fetchCustomerData(currentYear);
   }, [currentYear]);
 
-  useEffect(() => {
-    // Fetch data again whenever customerCountData changes
-    if (!loading) {
-      fetchCustomerData(currentYear);
-    }
-  }, [customerCountData, currentYear, loading]);
+  // useEffect(() => {
+  //   // Fetch data again whenever customerCountData changes
+  //   if (!loading) {
+  //     fetchCustomerData(currentYear);
+  //   }
+  // }, [customerCountData, currentYear, loading]);
 
   const monthNames = [
     "Jan",

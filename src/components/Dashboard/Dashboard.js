@@ -56,11 +56,32 @@ const Dashboard = () => {
   const [isBarGraphModalOpen, setIsBarGraphModalOpen] = useState(false);
   const [showSnackbar, setShowSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [isEditMade, setIsEditMade] = useState(false);
+
+
+
+  useEffect(() => {
+    const user = auth.currentUser;
+    if (user) {
+      fetchCustomers();
+    }
+  }, []);
+
+  useEffect(() => {
+    // console.log("Calling fetchCustomers from useEffect...");
+    if (!isAddCustomerModalOpen && !isEditCustomerModalOpen && isEditMade) {
+      console.log("fetch")
+      fetchCustomers();
+    } else {
+      console.log("Database call unnecessary as Add/Edit Customer modal is open.");
+    }
+  }, [isAddCustomerModalOpen, isEditCustomerModalOpen, isEditMade]);
 
   // Function to fetch customer data from the Firestore database
   const fetchCustomers = async () => {
     try {
       setLoading(true);
+      // console.log("Fetching customers from the database...");
       // Retrieve customer data from the 'customers' collection
       const snapshot = await db.collection("customers").get();
       // Map Firestore documents to an array of customer objects with unique IDs
@@ -91,6 +112,7 @@ const Dashboard = () => {
 
       // Set the customer data state with the retrieved data
       setCustomers(customerData);
+      console.log("Customers fetched successfully");
     } catch (error) {
       console.error("Error fetching customers:", error.message);
     } finally {
@@ -98,16 +120,14 @@ const Dashboard = () => {
     }
   };
 
-  // useEffect hook to fetch customer data when the modal is opened or closed
-  useEffect(() => {
-    fetchCustomers();
-  }, [isAddCustomerModalOpen]);
-
-  const handleAddSnackbar = () => {
+  const handleAddSnackbar = async () => {
     // Set the state to show the snackbar
     setShowSnackbar(true);
-    setSnackbarMessage("Customer Added Successfully!")
+    setSnackbarMessage("Customer Added Successfully!");
+    // Fetch customers after adding a new customer
+    await fetchCustomers();
   };
+  
   const handleDeleteSnackbar = () =>{
     // Set the state to show the snackbar
     setShowSnackbar(true);
@@ -189,11 +209,12 @@ const Dashboard = () => {
     setIsAddCustomerModalOpen(false);
   };
 
-  // Function to open the Edit Customer modal and set the current customer data
-  const openEditCustomerModal = (customerData) => {
-    setIsEditCustomerModalOpen(true);
-    setEditCustomerData(customerData);
-  };
+ // Function to open the Edit Customer modal and set the current customer data
+ const openEditCustomerModal = (customerData) => {
+  setIsEditCustomerModalOpen(true);
+  setEditCustomerData(customerData);
+  setIsEditMade(false); // Reset the edit made flag when opening the modal
+};
 
   // Function to close the Edit Customer modal
   const closeEditCustomerModal = () => {
@@ -204,7 +225,7 @@ const Dashboard = () => {
   // Function to handle the edit action
   const onEdit = (customerData) => {
     // Logic for handling the edit action
-    console.log("Edit button clicked for:", customerData);
+    // console.log("Edit button clicked for:", customerData);
     openEditCustomerModal(customerData);
   };
 

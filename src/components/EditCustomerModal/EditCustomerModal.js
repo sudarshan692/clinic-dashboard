@@ -12,14 +12,15 @@ const EditCustomerModal = ({ isOpen, onRequestClose, initialData, isMobileUnique
   });
 
   const [errorMessage, setErrorMessage] = useState('');
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
 
   useEffect(() => {
     setEditedData({ ...initialData });
   }, [initialData]);
 
-  // Update initialData when it changes
   useEffect(() => {
     setErrorMessage(''); // Reset error message when initialData changes
+    setHasUnsavedChanges(false); // Reset unsaved changes when initialData changes
   }, [initialData]);
 
   const handleInputChange = (e) => {
@@ -28,6 +29,10 @@ const EditCustomerModal = ({ isOpen, onRequestClose, initialData, isMobileUnique
       ...prevData,
       [name]: value,
     }));
+     // Check if the current value is different from the initial value
+     const isValueChanged = value !== initialData[name];
+      // Set the flag to indicate unsaved changes
+      setHasUnsavedChanges(isValueChanged);
   };
 
   const handleSave = async () => {
@@ -68,6 +73,8 @@ const EditCustomerModal = ({ isOpen, onRequestClose, initialData, isMobileUnique
         onCustomerEdited();
       } else {
         setIsMobileUnique(false);
+        // Reset the flag after saving
+      setHasUnsavedChanges(false);
       }
     } catch (error) {
       console.error('Error saving edited customer data:', error.message);
@@ -161,7 +168,7 @@ const EditCustomerModal = ({ isOpen, onRequestClose, initialData, isMobileUnique
           <button className="right-bottom-button-cancel" onClick={onRequestClose}>Cancel</button>
         </div>
         <div>
-          <button className="right-bottom-button-save" onClick={handleSave}>Save</button>
+          <button className="right-bottom-button-save" onClick={handleSave} disabled={!hasUnsavedChanges}>Save</button>
         </div>
         {errorMessage && (
           <div className='error-message1'>

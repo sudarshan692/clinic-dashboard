@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Modal from 'react-modal';
 import { db, firebase } from '../shared/firebase';
 import './addPaymentModal.css';
@@ -6,6 +6,18 @@ import './addPaymentModal.css';
 const AddPaymentModal = ({ isOpen, onRequestClose, selectedCustomer, onPaymentAdded }) => {
   const [paymentAmount, setPaymentAmount] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  useEffect(() => {
+    // Update the isModalOpen state when the modal is opened or closed
+    setIsModalOpen(isOpen);
+
+    // Reset the error message when the modal is closed
+    if (!isOpen) {
+      setPaymentAmount('');
+      setErrorMessage('');
+    }
+  }, [isOpen]);
 
   const handleInputChange = (e) => {
     setPaymentAmount(e.target.value);
@@ -82,8 +94,13 @@ const AddPaymentModal = ({ isOpen, onRequestClose, selectedCustomer, onPaymentAd
 
   return (
     <Modal
-      isOpen={isOpen}
-      onRequestClose={onRequestClose}
+      isOpen={isModalOpen}
+      onRequestClose={() => {
+        onRequestClose();
+        // Additional cleanup if needed
+        setPaymentAmount('');
+        setErrorMessage('');
+      }}
       contentLabel="Add Payment Modal"
       style={customStyles}
     >
