@@ -9,7 +9,7 @@ import "./dashboard.css";
 import Modal from "react-modal";
 import { CircularProgressbar } from "react-circular-progressbar";
 import CustomerBarChart from "../CustomerBarChart/CustomerBarChart";
-// Define your CustomAlert component
+
 const CustomAlert = ({ message, onConfirm, onCancel }) => {
   const customStyles = {
     content: {
@@ -95,6 +95,11 @@ const Dashboard = () => {
     }
   };
 
+  // useEffect hook to fetch customer data when the modal is opened or closed
+  useEffect(() => {
+    fetchCustomers();
+  }, [isAddCustomerModalOpen]);
+
   // Function to format a number as Indian Rupees (INR)
   const formatAsIndianRupees = (amount) => {
     return new Intl.NumberFormat("en-IN", {
@@ -102,29 +107,6 @@ const Dashboard = () => {
       currency: "INR",
       minimumFractionDigits: 2,
     }).format(amount);
-  };
-
-  // useEffect hook to fetch customer data when the modal is opened or closed
-  useEffect(() => {
-    fetchCustomers();
-  }, [isAddCustomerModalOpen]);
-
-  // Function to handle user logout and redirect to the login page
-  const handleLogout = async () => {
-    try {
-      setLoading(true);
-      // Sign out the authenticated user using Firebase authentication
-      await auth.signOut();
-      // Redirect to the login page after a short delay (1 second)
-      setTimeout(() => {
-        history.push("/login");
-      }, 1000);
-      console.log("Logout successful");
-    } catch (error) {
-      console.error("Error logging out:", error.message);
-    } finally {
-      setLoading(false);
-    }
   };
 
   // Function to count the number of customers in progress, completed, and total customers
@@ -178,17 +160,15 @@ const Dashboard = () => {
     setCustomerToDelete(null);
   };
 
-  // Updated handleDelete function to use custom alert
-  const handleDelete = (uniqueID) => {
-    const customer = customers.find((c) => c.uniqueID === uniqueID);
-    if (customer) {
-      openCustomAlert(customer);
-    }
-  };
-
   // Function to open the Add Customer modal
   const openAddCustomerModal = () => {
     setIsAddCustomerModalOpen(true);
+  };
+
+  // Function to close the Add Customer modal
+  const closeAddCustomerModal = () => {
+    setIsMobileUnique(true);
+    setIsAddCustomerModalOpen(false);
   };
 
   // Function to open the Edit Customer modal and set the current customer data
@@ -201,6 +181,13 @@ const Dashboard = () => {
   const closeEditCustomerModal = () => {
     setIsEditCustomerModalOpen(false);
     setEditCustomerData(null);
+  };
+
+  // Function to handle the edit action
+  const onEdit = (customerData) => {
+    // Logic for handling the edit action
+    console.log("Edit button clicked for:", customerData);
+    openEditCustomerModal(customerData);
   };
 
   // Function to delete a customer from the database
@@ -223,17 +210,30 @@ const Dashboard = () => {
     }
   };
 
-  // Function to close the Add Customer modal
-  const closeAddCustomerModal = () => {
-    setIsMobileUnique(true);
-    setIsAddCustomerModalOpen(false);
+  // Updated handleDelete function to use custom alert
+  const handleDelete = (uniqueID) => {
+    const customer = customers.find((c) => c.uniqueID === uniqueID);
+    if (customer) {
+      openCustomAlert(customer);
+    }
   };
 
-  // Function to handle the edit action
-  const onEdit = (customerData) => {
-    // Logic for handling the edit action
-    console.log("Edit button clicked for:", customerData);
-    openEditCustomerModal(customerData);
+  // Function to handle user logout and redirect to the login page
+  const handleLogout = async () => {
+    try {
+      setLoading(true);
+      // Sign out the authenticated user using Firebase authentication
+      await auth.signOut();
+      // Redirect to the login page after a short delay (1 second)
+      setTimeout(() => {
+        history.push("/login");
+      }, 1000);
+      console.log("Logout successful");
+    } catch (error) {
+      console.error("Error logging out:", error.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   // JSX for rendering the Dashboard component
@@ -435,7 +435,7 @@ const Dashboard = () => {
       >
         Add Customer
       </button>
-      {/* <CustomerBarChart/> */}
+
       <AddCustomerModal
         isOpen={isAddCustomerModalOpen}
         onRequestClose={closeAddCustomerModal}
@@ -453,8 +453,6 @@ const Dashboard = () => {
           fetchCustomers();
         }}
       />
-
-      {/* Render CustomerBarChart in a modal */}
       <Modal
         isOpen={isBarGraphModalOpen}
         onRequestClose={() => setIsBarGraphModalOpen(false)}
