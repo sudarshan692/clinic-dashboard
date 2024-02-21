@@ -20,7 +20,7 @@ const CustomSnackbar = ({ message, duration, onClose }) => {
         left: '50%',
         transform: 'translateX(-50%)',
         backgroundColor: '#333',
-        color: '#16FF00',
+        color: 'rgb(211, 227, 253)',
         padding: '15px',
         borderRadius: '5px',
         boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
