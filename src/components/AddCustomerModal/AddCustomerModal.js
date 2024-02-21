@@ -283,7 +283,7 @@ const handleSave = async () => {
         </label>
       </div>
       <div>
-        <button class="right-bottom-button-cancel" o onClick={() => {
+        <button class="right-bottom-button-cancel" onClick={() => {
             // resetErrors(); 
             onRequestClose();}}>Cancel</button>
       </div>
