@@ -94,11 +94,11 @@ const AddPaymentModal = ({ isOpen, onRequestClose, selectedCustomer, onPaymentAd
             <input className='payment-input' type="text" value={paymentAmount} onChange={handleInputChange}  disabled={selectedCustomer.endDate !== ''} />
           </label>
           <div>
-            <button class="right-bottom-button-cancel" onClick={onRequestClose}>Cancel</button>
+            <button className="right-bottom-button-cancel" onClick={onRequestClose}>Cancel</button>
           </div>
           <div>
             <button
-              class="right-bottom-button-save"
+              className="right-bottom-button-save"
               onClick={handleSave}
               disabled={selectedCustomer.endDate !== '' || !!errorMessage} // Disable if endDate is not an empty string or if there is an error message
             >

@@ -158,10 +158,10 @@ const EditCustomerModal = ({ isOpen, onRequestClose, initialData, isMobileUnique
           </label>
         </div>
         <div>
-          <button class="right-bottom-button-cancel" onClick={onRequestClose}>Cancel</button>
+          <button className="right-bottom-button-cancel" onClick={onRequestClose}>Cancel</button>
         </div>
         <div>
-          <button class="right-bottom-button-save" onClick={handleSave}>Save</button>
+          <button className="right-bottom-button-save" onClick={handleSave}>Save</button>
         </div>
         {errorMessage && (
           <div className='error-message1'>

@@ -284,12 +284,12 @@ const handleSave = async () => {
         </label>
       </div>
       <div>
-        <button class="right-bottom-button-cancel" onClick={() => {
+        <button className="right-bottom-button-cancel" onClick={() => {
             // resetErrors(); 
             onRequestClose();}}>Cancel</button>
       </div>
       <div>
-        <button  class="right-bottom-button-save" onClick={handleSave}>Save</button>
+        <button  className="right-bottom-button-save" onClick={handleSave}>Save</button>
       </div>
       </div>
     </Modal>
