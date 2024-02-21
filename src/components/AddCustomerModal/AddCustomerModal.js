@@ -4,7 +4,7 @@ import { db } from '../shared/firebase'; // Assuming you have a 'db' instance fr
 import './addCustomerModal.css';
 
 // Functional component for the Add Customer Modal
-const AddCustomerModal = ({ isOpen, onRequestClose, isMobileUnique, setIsMobileUnique }) => {
+const AddCustomerModal = ({ isOpen, onRequestClose, isMobileUnique, setIsMobileUnique, onCustomerAdded  }) => {
   // State to manage customer data and initialize it with default values
   const [customerData, setCustomerData] = useState({
     customerID: '',
@@ -221,6 +221,7 @@ const handleSave = async () => {
       });
       // Close the modal after successful save
       onRequestClose();
+      onCustomerAdded();
     } else {
       // Handle case where mobile number is not unique
       setIsMobileUnique(false);

@@ -3,7 +3,7 @@ import Modal from 'react-modal';
 import { db } from '../shared/firebase';
 import '../EditCustomerModal/editCustomerModal.css';
 
-const EditCustomerModal = ({ isOpen, onRequestClose, initialData, isMobileUnique, setIsMobileUnique, onEditSuccess }) => {
+const EditCustomerModal = ({ isOpen, onRequestClose, initialData, isMobileUnique, setIsMobileUnique, onEditSuccess, onCustomerEdited }) => {
   const [editedData, setEditedData] = useState({
     name: '',
     mobile: '',
@@ -65,6 +65,7 @@ const EditCustomerModal = ({ isOpen, onRequestClose, initialData, isMobileUnique
   
         await db.collection('customers').doc(initialData.uniqueID).update(updatedData);
         onEditSuccess();
+        onCustomerEdited();
       } else {
         setIsMobileUnique(false);
       }

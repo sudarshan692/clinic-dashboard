@@ -9,6 +9,7 @@ import "./dashboard.css";
 import Modal from "react-modal";
 import { CircularProgressbar } from "react-circular-progressbar";
 import CustomerBarChart from "../CustomerBarChart/CustomerBarChart";
+import CustomerSnackbar from '../shared/CustomerSnackbar';
 
 const CustomAlert = ({ message, onConfirm, onCancel }) => {
   const customStyles = {
@@ -53,6 +54,8 @@ const Dashboard = () => {
   const [totalCost, setTotalCost] = useState(0);
   const [totalAmountReceived, setTotalAmountReceived] = useState(0);
   const [isBarGraphModalOpen, setIsBarGraphModalOpen] = useState(false);
+  const [showSnackbar, setShowSnackbar] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
 
   // Function to fetch customer data from the Firestore database
   const fetchCustomers = async () => {
@@ -100,6 +103,21 @@ const Dashboard = () => {
     fetchCustomers();
   }, [isAddCustomerModalOpen]);
 
+  const handleAddSnackbar = () => {
+    // Set the state to show the snackbar
+    setShowSnackbar(true);
+    setSnackbarMessage("Customer Added Successfully!")
+  };
+  const handleDeleteSnackbar = () =>{
+    // Set the state to show the snackbar
+    setShowSnackbar(true);
+    setSnackbarMessage("Customer Deleted Successfully!")
+  }
+  const handleEditSnackbar =() =>{
+     // Set the state to show the snackbar
+     setShowSnackbar(true);
+     setSnackbarMessage("Customer Edited Successfully!")
+  }
   // Function to format a number as Indian Rupees (INR)
   const formatAsIndianRupees = (amount) => {
     return new Intl.NumberFormat("en-IN", {
@@ -200,6 +218,7 @@ const Dashboard = () => {
         await db.collection("customers").doc(uniqueID).delete();
         // Refetch the updated customer list
         fetchCustomers();
+        handleDeleteSnackbar();
       } else {
         console.error("Error deleting customer: Invalid document ID");
       }
@@ -441,6 +460,7 @@ const Dashboard = () => {
         onRequestClose={closeAddCustomerModal}
         isMobileUnique={isMobileUnique}
         setIsMobileUnique={setIsMobileUnique}
+        onCustomerAdded={handleAddSnackbar} 
       />
       <EditCustomerModal
         isOpen={isEditCustomerModalOpen}
@@ -448,6 +468,7 @@ const Dashboard = () => {
         initialData={editCustomerData}
         isMobileUnique={isMobileUnique}
         setIsMobileUnique={setIsMobileUnique}
+        onCustomerEdited={handleEditSnackbar} 
         onEditSuccess={() => {
           closeEditCustomerModal();
           fetchCustomers();
@@ -496,6 +517,13 @@ const Dashboard = () => {
         </button>
         <CustomerBarChart />
       </Modal>
+      {showSnackbar && (
+    <CustomerSnackbar
+      message={snackbarMessage}
+      duration={3000}
+      onClose={() => setShowSnackbar(false)}
+    />
+  )}
     </div>
   );
 };
