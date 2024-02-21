@@ -100,7 +100,7 @@ const Login = () => {
         <div>
           <label className="login-label">Password *</label>
           <input
-          placeholder="Password"
+            placeholder="Password"
             className="login-inputboxes"
             type="password"
             value={password}
@@ -108,7 +108,16 @@ const Login = () => {
           />
           <div className="error-message">{passwordError}</div>
         </div>
-        <button className="login-button" onClick={handleLogin}>
+        <button
+          className="login-button"
+          onClick={handleLogin}
+          onMouseEnter={(e) => {
+            e.target.style.backgroundColor = "rgb(3, 21, 37)";
+          }}
+          onMouseLeave={(e) => {
+            e.target.style.backgroundColor = "#3f51b5";
+          }}
+        >
           LOG IN
         </button>
       </div>

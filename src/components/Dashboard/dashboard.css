@@ -13,16 +13,34 @@
   cursor: pointer;
   box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.5);
   font-size: 15px;
+  transition: background-color 0.3s ease;
+}
+.view-bar-graph-btn{
+  position: fixed;
+  top: 80px;
+  right: 440px;
+  padding: 11px;
+  border-width: 0px;
+  border-radius: 6px;
+  color: rgb(211, 227, 253);
+  background-color: #3f51b5;
+  cursor: pointer;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.5);
+  font-size: 15px;
+  transition: background-color 0.3s ease;
 }
 .logout-btn {
   position: fixed;
-  top: 15px;
+  padding: 8px;
+  border-radius: 5px;
+  top: 9px;
   right: 10px;
   border-width: 0px;
   color: rgb(211, 227, 253);
   background-color: #3f51b5;
   cursor: pointer;
   font-size: 15px;
+  transition: background-color 0.3s ease;
 }
 .confirm-alert-button {
   margin-top: 40px;

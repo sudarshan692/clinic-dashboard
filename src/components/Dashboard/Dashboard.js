@@ -8,7 +8,7 @@ import EditCustomerModal from "../EditCustomerModal/EditCustomerModal";
 import "./dashboard.css";
 import Modal from "react-modal";
 import { CircularProgressbar } from "react-circular-progressbar";
-
+import CustomerBarChart from "../CustomerBarChart/CustomerBarChart";
 // Define your CustomAlert component
 const CustomAlert = ({ message, onConfirm, onCancel }) => {
   const customStyles = {
@@ -52,6 +52,7 @@ const Dashboard = () => {
   const [customerToDelete, setCustomerToDelete] = useState(null);
   const [totalCost, setTotalCost] = useState(0);
   const [totalAmountReceived, setTotalAmountReceived] = useState(0);
+  const [isBarGraphModalOpen, setIsBarGraphModalOpen] = useState(false);
 
   // Function to fetch customer data from the Firestore database
   const fetchCustomers = async () => {
@@ -239,7 +240,16 @@ const Dashboard = () => {
   return (
     <div className="container">
       <h1 className="heading">Welcome to Piles Clinic Dashboard</h1>
-      <button className="logout-btn" onClick={handleLogout}>
+      <button
+        className="logout-btn"
+        onClick={handleLogout}
+        onMouseEnter={(e) => {
+          e.target.style.backgroundColor = "#0d2136";
+        }}
+        onMouseLeave={(e) => {
+          e.target.style.backgroundColor = "#3f51b5";
+        }}
+      >
         Logout
       </button>
       {loading ? (
@@ -396,15 +406,36 @@ const Dashboard = () => {
           <p className="total-income-pending">
             P: {formatAsIndianRupees(totalPendingAmount)}
           </p>
-          <p className="total-income">
-            T: {formatAsIndianRupees(totalCost)}
-          </p>
+          <p className="total-income">T: {formatAsIndianRupees(totalCost)}</p>
         </div>
       </div>
 
-      <button className="add-customer-btn" onClick={openAddCustomerModal}>
+      <button
+        className="view-bar-graph-btn"
+        onClick={() => setIsBarGraphModalOpen(true)}
+        onMouseEnter={(e) => {
+          e.target.style.backgroundColor = "#0d2136";
+        }}
+        onMouseLeave={(e) => {
+          e.target.style.backgroundColor = "#3f51b5";
+        }}
+      >
+        View Bar Graph
+      </button>
+
+      <button
+        className="add-customer-btn"
+        onClick={openAddCustomerModal}
+        onMouseEnter={(e) => {
+          e.target.style.backgroundColor = "#162c46";
+        }}
+        onMouseLeave={(e) => {
+          e.target.style.backgroundColor = "#3f51b5";
+        }}
+      >
         Add Customer
       </button>
+      {/* <CustomerBarChart/> */}
       <AddCustomerModal
         isOpen={isAddCustomerModalOpen}
         onRequestClose={closeAddCustomerModal}
@@ -422,6 +453,51 @@ const Dashboard = () => {
           fetchCustomers();
         }}
       />
+
+      {/* Render CustomerBarChart in a modal */}
+      <Modal
+        isOpen={isBarGraphModalOpen}
+        onRequestClose={() => setIsBarGraphModalOpen(false)}
+        contentLabel="Bar Graph Modal"
+        style={{
+          content: {
+            width: "55%",
+            height: "50%",
+            margin: "auto",
+            borderRadius: "10px",
+            border: "10px",
+            backgroundColor: "#0d2136",
+            overflow: "hidden",
+          },
+        }}
+      >
+        <button
+          style={{
+            position: "absolute",
+            top: "460px",
+            right: "15px",
+            backgroundColor: "#3f51b5",
+            padding: "5px",
+            borderWidth: "0px",
+            borderRadius: "5px",
+            width: "60px",
+            fontSize: "12px",
+            color: "#fff",
+            cursor: "pointer",
+            transition: "background-color 0.3s ease",
+          }}
+          onClick={() => setIsBarGraphModalOpen(false)}
+          onMouseEnter={(e) => {
+            e.target.style.backgroundColor = "#162c46";
+          }}
+          onMouseLeave={(e) => {
+            e.target.style.backgroundColor = "#3f51b5";
+          }}
+        >
+          Close
+        </button>
+        <CustomerBarChart />
+      </Modal>
     </div>
   );
 };
