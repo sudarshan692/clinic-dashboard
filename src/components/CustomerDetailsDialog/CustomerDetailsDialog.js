@@ -125,7 +125,7 @@ const CustomerDetailsDialog = ({ isOpen, onRequestClose, customerDetails }) => {
                     },
                     text: {
                       fill: "#fff",
-                      fontSize: "25px",
+                      fontSize: "23px",
                       dominantBaseline: "middle", // Vertical centering
                       textAnchor: "middle", // Horizontal centering
                     },
@@ -167,7 +167,7 @@ const CustomerDetailsDialog = ({ isOpen, onRequestClose, customerDetails }) => {
                     },
                     text: {
                       fill: "#fff",
-                      fontSize: "25px",
+                      fontSize: "23px",
                       dominantBaseline: "middle", // Vertical centering
                       textAnchor: "middle", // Horizontal centering
                     },

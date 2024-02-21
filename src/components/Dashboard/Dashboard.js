@@ -313,7 +313,7 @@ const Dashboard = () => {
             },
             text: {
               fill: "#fff",
-              fontSize: "25px",
+              fontSize: "23px",
               dominantBaseline: "middle", // Vertical centering
               textAnchor: "middle", // Horizontal centering
             },
@@ -346,7 +346,7 @@ const Dashboard = () => {
             },
             text: {
               fill: "#fff",
-              fontSize: "25px",
+              fontSize: "23px",
               dominantBaseline: "middle", // Vertical centering
               textAnchor: "middle", // Horizontal centering
             },
@@ -379,7 +379,7 @@ const Dashboard = () => {
             },
             text: {
               fill: "#fff",
-              fontSize: "25px",
+              fontSize: "23px",
               dominantBaseline: "middle", // Vertical centering
               textAnchor: "middle", // Horizontal centering
             },
@@ -413,7 +413,7 @@ const Dashboard = () => {
             },
             text: {
               fill: "#fff",
-              fontSize: "25px",
+              fontSize: "23px",
               dominantBaseline: "middle", // Vertical centering
               textAnchor: "middle", // Horizontal centering
             },
