@@ -124,7 +124,7 @@ const AddPaymentModal = ({ isOpen, onRequestClose, selectedCustomer, onPaymentAd
           </div>
         </div>
         {errorMessage && (
-          <div className='error-message'>
+          <div className='add-payment-error-message'>
             {errorMessage}
           </div>
         )}
