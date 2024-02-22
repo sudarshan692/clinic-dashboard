@@ -206,9 +206,9 @@ const CustomerDetailsDialog = ({ isOpen, onRequestClose, customerDetails }) => {
                           <strong>Amount:</strong> {payment.amount},{" "}
                           <strong>Date:</strong> {payment.date},{" "}
                           <strong>Time:</strong> {payment.time}
-                          <button onClick={() => handleEditPayment(payment)}>
-                            Edit
-                          </button>
+                          <span className="material-icons" style={{ cursor: "pointer", color: '#BE3144' }} onClick={() => handleEditPayment(payment)}>
+                            edit
+                          </span>
                         </li>
                       ))
                   ) : (
