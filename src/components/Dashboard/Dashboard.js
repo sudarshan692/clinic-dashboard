@@ -9,7 +9,7 @@ import "./dashboard.css";
 import Modal from "react-modal";
 import { CircularProgressbar } from "react-circular-progressbar";
 import CustomerBarChart from "../CustomerBarChart/CustomerBarChart";
-import CustomerSnackbar from '../shared/CustomerSnackbar';
+import CustomerSnackbar from "../shared/CustomerSnackbar";
 
 const CustomAlert = ({ message, onConfirm, onCancel }) => {
   const customStyles = {
@@ -58,8 +58,6 @@ const Dashboard = () => {
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [isEditMade, setIsEditMade] = useState(false);
 
-
-
   useEffect(() => {
     const user = auth.currentUser;
     if (user) {
@@ -70,10 +68,12 @@ const Dashboard = () => {
   useEffect(() => {
     // console.log("Calling fetchCustomers from useEffect...");
     if (!isAddCustomerModalOpen && !isEditCustomerModalOpen && isEditMade) {
-      console.log("fetch")
+      console.log("fetch");
       fetchCustomers();
     } else {
-      console.log("Database call unnecessary as Add/Edit Customer modal is open.");
+      console.log(
+        "Database call unnecessary as Add/Edit Customer modal is open."
+      );
     }
   }, [isAddCustomerModalOpen, isEditCustomerModalOpen, isEditMade]);
 
@@ -127,17 +127,17 @@ const Dashboard = () => {
     // Fetch customers after adding a new customer
     await fetchCustomers();
   };
-  
-  const handleDeleteSnackbar = () =>{
+
+  const handleDeleteSnackbar = () => {
     // Set the state to show the snackbar
     setShowSnackbar(true);
-    setSnackbarMessage("Customer Deleted Successfully!")
-  }
-  const handleEditSnackbar =() =>{
-     // Set the state to show the snackbar
-     setShowSnackbar(true);
-     setSnackbarMessage("Customer Edited Successfully!")
-  }
+    setSnackbarMessage("Customer Deleted Successfully!");
+  };
+  const handleEditSnackbar = () => {
+    // Set the state to show the snackbar
+    setShowSnackbar(true);
+    setSnackbarMessage("Customer Edited Successfully!");
+  };
   // Function to format a number as Indian Rupees (INR)
   const formatAsIndianRupees = (amount) => {
     return new Intl.NumberFormat("en-IN", {
@@ -209,12 +209,12 @@ const Dashboard = () => {
     setIsAddCustomerModalOpen(false);
   };
 
- // Function to open the Edit Customer modal and set the current customer data
- const openEditCustomerModal = (customerData) => {
-  setIsEditCustomerModalOpen(true);
-  setEditCustomerData(customerData);
-  setIsEditMade(false); // Reset the edit made flag when opening the modal
-};
+  // Function to open the Edit Customer modal and set the current customer data
+  const openEditCustomerModal = (customerData) => {
+    setIsEditCustomerModalOpen(true);
+    setEditCustomerData(customerData);
+    setIsEditMade(false); // Reset the edit made flag when opening the modal
+  };
 
   // Function to close the Edit Customer modal
   const closeEditCustomerModal = () => {
@@ -481,7 +481,7 @@ const Dashboard = () => {
         onRequestClose={closeAddCustomerModal}
         isMobileUnique={isMobileUnique}
         setIsMobileUnique={setIsMobileUnique}
-        onCustomerAdded={handleAddSnackbar} 
+        onCustomerAdded={handleAddSnackbar}
       />
       <EditCustomerModal
         isOpen={isEditCustomerModalOpen}
@@ -489,7 +489,7 @@ const Dashboard = () => {
         initialData={editCustomerData}
         isMobileUnique={isMobileUnique}
         setIsMobileUnique={setIsMobileUnique}
-        onCustomerEdited={handleEditSnackbar} 
+        onCustomerEdited={handleEditSnackbar}
         onEditSuccess={() => {
           closeEditCustomerModal();
           fetchCustomers();
@@ -539,12 +539,12 @@ const Dashboard = () => {
         <CustomerBarChart />
       </Modal>
       {showSnackbar && (
-    <CustomerSnackbar
-      message={snackbarMessage}
-      duration={3000}
-      onClose={() => setShowSnackbar(false)}
-    />
-  )}
+        <CustomerSnackbar
+          message={snackbarMessage}
+          duration={3000}
+          onClose={() => setShowSnackbar(false)}
+        />
+      )}
     </div>
   );
 };

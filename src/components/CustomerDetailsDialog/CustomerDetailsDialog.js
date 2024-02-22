@@ -2,10 +2,13 @@ import React, { useEffect, useState } from "react";
 import Modal from "react-modal";
 import "./customerDetailsDialog.css";
 import { CircularProgressbar } from "react-circular-progressbar";
+import EditPaymentModal from "../EditPaymentModal/EditPaymentModal";
 
 const CustomerDetailsDialog = ({ isOpen, onRequestClose, customerDetails }) => {
   const [totalReceivedAmount, setTotalReceivedAmount] = useState(0);
   const [pendingAmount, setPendingAmount] = useState(0);
+  const [isEditPaymentModalOpen, setIsEditPaymentModalOpen] = useState(false);
+  const [selectedPayment, setSelectedPayment] = useState(null);
 
   useEffect(() => {
     if (customerDetails && customerDetails.payments && customerDetails.payments.length > 0) {
@@ -25,12 +28,20 @@ const CustomerDetailsDialog = ({ isOpen, onRequestClose, customerDetails }) => {
       setPendingAmount(customerDetails ? customerDetails.totalCost : 0);
     }
   }, [customerDetails]);
-  
+
+  const handleEditPayment = (payment) => {
+    setSelectedPayment(payment);
+    setIsEditPaymentModalOpen(true);
+  };
+
+  const handleEditPaymentModalClose = () => {
+    setIsEditPaymentModalOpen(false);
+    setSelectedPayment(null);
+  };
 
   const calculatePercentage = (value, total) => {
     return total && total !== 0 ? (value / total) * 100 : 0;
   };
-  
 
   // Function to format a number as Indian Rupees (INR)
   const formatAsIndianRupees = (amount) => {
@@ -195,6 +206,9 @@ const CustomerDetailsDialog = ({ isOpen, onRequestClose, customerDetails }) => {
                           <strong>Amount:</strong> {payment.amount},{" "}
                           <strong>Date:</strong> {payment.date},{" "}
                           <strong>Time:</strong> {payment.time}
+                          <button onClick={() => handleEditPayment(payment)}>
+                            Edit
+                          </button>
                         </li>
                       ))
                   ) : (
@@ -202,6 +216,15 @@ const CustomerDetailsDialog = ({ isOpen, onRequestClose, customerDetails }) => {
                   )}
                 </ul>
               </div>
+              {isEditPaymentModalOpen && (
+                <EditPaymentModal
+                  isOpen={isEditPaymentModalOpen}
+                  onRequestClose={handleEditPaymentModalClose}
+                  selectedCustomer={customerDetails}
+                  selectedPayment={selectedPayment}
+                  onPaymentUpdated={() => {}}
+                />
+              )}
             </div>
           )}
           <button className="close-button" onClick={onRequestClose}>
