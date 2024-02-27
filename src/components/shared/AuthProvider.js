@@ -1,12 +1,5 @@
-// AuthProvider.js
-
-// Import necessary dependencies from React
 import React, { createContext, useContext, useEffect, useState } from 'react';
-
-// Import the authentication service from the shared Firebase module
-import { auth } from '../shared/firebase'; // Adjust the path based on your project structure
-
-// Import the LoadingSpinner component for displaying a loading indicator
+import { auth } from '../shared/firebase'; 
 import LoadingSpinner from './LoadingSpinner';
 
 // Create an authentication context using React's createContext
@@ -14,7 +7,6 @@ const AuthContext = createContext();
 
 // AuthProvider component - manages authentication state and provides related functionality to children components
 export const AuthProvider = ({ children }) => {
-  // State variables for the current authenticated user and loading indicator
   const [currentUser, setCurrentUser] = useState(null);
   const [loading, setLoading] = useState(true);
 

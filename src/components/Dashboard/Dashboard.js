@@ -10,6 +10,7 @@ import Modal from "react-modal";
 import { CircularProgressbar } from "react-circular-progressbar";
 import CustomerBarChart from "../CustomerBarChart/CustomerBarChart";
 import CustomerSnackbar from "../shared/CustomerSnackbar";
+import ExportData from "../ExportCustomerData/ExportData";
 
 const CustomAlert = ({ message, onConfirm, onCancel }) => {
   const customStyles = {
@@ -298,12 +299,15 @@ const Dashboard = () => {
         </div>
       ) : (
         // Display the CustomerTable component with customer data and onDelete function
+        <>
         <CustomerTable
           data={customers}
           onDelete={handleDelete}
           onEdit={onEdit}
           onPaymentAdded={fetchCustomers}
         />
+       
+      </>
       )}
       {isCustomAlertOpen && (
         <CustomAlert
@@ -450,6 +454,8 @@ const Dashboard = () => {
         </div>
       </div>
 
+     
+      <ExportData data={customers} />
       <button
         className="view-bar-graph-btn"
         onClick={() => setIsBarGraphModalOpen(true)}
@@ -475,6 +481,7 @@ const Dashboard = () => {
       >
         Add Customer
       </button>
+
 
       <AddCustomerModal
         isOpen={isAddCustomerModalOpen}
