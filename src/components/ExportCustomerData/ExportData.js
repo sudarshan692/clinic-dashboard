@@ -130,7 +130,7 @@ const ExportData = ({ data }) => {
 
   return (
     <div>
-      <button className='export-data-btn' onClick={exportData}  onMouseEnter={(e) => {
+      <button className='export-data-btn' onClick={exportData}  disabled={data.length === 0} onMouseEnter={(e) => {
           e.target.style.backgroundColor = "#0d2136";
         }}
         onMouseLeave={(e) => {
