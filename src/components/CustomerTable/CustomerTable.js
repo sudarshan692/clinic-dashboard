@@ -199,7 +199,6 @@ const CustomerTable = ({ data, onDelete, onEdit, onPaymentAdded }) => {
           onRowClicked={handleRowClick}
           noDataComponent={<CustomNoDataComponent />}
         />
-         {/* Render the AddPaymentModal */}
       <AddPaymentModal
         isOpen={isAddPaymentModalOpen}
         onRequestClose={closeAddPaymentModal}

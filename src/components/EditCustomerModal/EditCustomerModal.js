@@ -129,10 +129,10 @@ const EditCustomerModal = ({ isOpen, onRequestClose, initialData, isMobileUnique
         <p className='customerID'>CustomerID: {editedData.customerID}</p>
         <div className='container1'>
           <label className='all-label'>Name *
-            <input className='inputbox1' type="text" name="name" value={editedData.name || ''} onChange={handleInputChange} />
+            <input className='inputbox1' placeholder='Name' type="text" name="name" value={editedData.name || ''} onChange={handleInputChange} />
           </label>
           <label className='all-label'>Mobile Number *
-            <input className='inputbox1' type="text" name="mobile" value={editedData.mobile || ''} onChange={handleInputChange} />
+            <input className='inputbox1' placeholder='Mobile Number' type="text" name="mobile" value={editedData.mobile || ''} onChange={handleInputChange} />
             {isMobileUnique ? null : (
               <div style={{ color: 'red' }}>Mobile number must be unique</div>
             )}
@@ -141,19 +141,19 @@ const EditCustomerModal = ({ isOpen, onRequestClose, initialData, isMobileUnique
 
         <div className='container1'>
           <label className='all-label'>Place *
-            <input className='inputbox1' type="text" name="place" value={editedData.place || ''} onChange={handleInputChange} />
+            <input className='inputbox1' placeholder='Place' type="text" name="place" value={editedData.place || ''} onChange={handleInputChange} />
           </label>
           <label className='all-label'>Address *
-            <input className='inputbox1' type="text" name="address" value={editedData.address || ''} onChange={handleInputChange} />
+            <input className='inputbox1' placeholder='Address' type="text" name="address" value={editedData.address || ''} onChange={handleInputChange} />
           </label>
         </div>
 
         <div className='container1'>
           <label className='all-label'>Age *
-            <input className='inputbox1' type="text" name="age" value={editedData.age || ''} onChange={handleInputChange} />
+            <input className='inputbox1' placeholder='Age' type="text" name="age" value={editedData.age || ''} onChange={handleInputChange} />
           </label>
           <label className='all-label'>Total Cost *
-            <input className='inputbox1' type="text" name="totalCost" value={editedData.totalCost || ''} onChange={handleInputChange} />
+            <input className='inputbox1' placeholder='Total Cost' type="text" name="totalCost" value={editedData.totalCost || ''} onChange={handleInputChange} />
           </label>
         </div>
         <div className='container1'>

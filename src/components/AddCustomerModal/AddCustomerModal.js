@@ -227,17 +227,17 @@ const handleSave = async () => {
       contentLabel="Add Customer Modal"
       style={customStyles} // Apply the custom styles
     >
-      <div className='maincard'>
-      <h2  className='edit-customer-heading'>Add Customer</h2>
+      <div className='add-customer-dialog'>
+      <h2  className='add-customer-heading'>Add Customer</h2>
       <p className='customerID'>CustomerID: {customerData.customerID}</p>
 
       <div className='container1'>
         <label className='all-label'>Name *
-        <input className='inputbox1' type="text" name="name" value={customerData.name} onChange={handleInputChange} />
+        <input className='inputbox1' placeholder='Name' type="text" name="name" value={customerData.name} onChange={handleInputChange} />
         <div className="error-messages">{nameError}</div>
         </label>
         <label  className='all-label'>Mobile Number *
-        <input className='inputbox1' type="text" name="mobile" value={customerData.mobile} onChange={handleInputChange} />
+        <input className='inputbox1' placeholder='Mobile Number' type="text" name="mobile" value={customerData.mobile} onChange={handleInputChange} />
         {isMobileUnique ? null : (
         <div style={{ color: 'red' }}>Mobile number must be unique</div>
       )} 
@@ -247,22 +247,22 @@ const handleSave = async () => {
 
       <div className='container1'>
         <label className='all-label'>Place *
-        <input className='inputbox1' type="text" name="place" value={customerData.place} onChange={handleInputChange} />
+        <input className='inputbox1' placeholder='Place' type="text" name="place" value={customerData.place} onChange={handleInputChange} />
         <div className="error-messages">{placeError}</div>  
         </label>
         <label className='all-label'>Address
-        <input className='inputbox1' type="text" name="address" value={customerData.address} onChange={handleInputChange} />
+        <input className='inputbox1' placeholder='Address' type="text" name="address" value={customerData.address} onChange={handleInputChange} />
         {/* <div className="error-messages">{addressError}</div>   */}
         </label>
       </div>
 
       <div className='container1'>
         <label className='all-label'>Age *
-        <input className='inputbox1' type="text" name="age" value={customerData.age} onChange={handleInputChange} />
+        <input className='inputbox1' placeholder='Age' type="text" name="age" value={customerData.age} onChange={handleInputChange} />
         <div className="error-messages">{ageError}</div>  
         </label>
         <label className='all-label'>Total Cost *
-        <input className='inputbox1' type="text" name="totalCost" value={customerData.totalCost} onChange={handleInputChange} />
+        <input className='inputbox1' placeholder='Total Cost' type="text" name="totalCost" value={customerData.totalCost} onChange={handleInputChange} />
         <div className="error-messages">{totalCostError}</div>  
         </label>
       </div>
