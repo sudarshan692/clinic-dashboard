@@ -44,7 +44,7 @@ const EditPaymentModal = ({ isOpen, onRequestClose, selectedCustomer, selectedPa
 
       const totalReceivedAmount = updatedPayments.reduce((acc, payment) => acc + payment.amount, 0);
 
-      if (totalReceivedAmount >= selectedCustomer.totalCost) {
+      if (totalReceivedAmount > selectedCustomer.totalCost) {
         setErrorMessage('Total amount received is greater than or equal to total cost.');
         return;
       }

@@ -3,6 +3,7 @@ import Modal from "react-modal";
 import "./customerDetailsDialog.css";
 import { CircularProgressbar } from "react-circular-progressbar";
 import EditPaymentModal from "../EditPaymentModal/EditPaymentModal";
+import { db } from "../shared/firebase";
 
 const CustomerDetailsDialog = ({ isOpen, onRequestClose, customerDetails }) => {
   const [totalReceivedAmount, setTotalReceivedAmount] = useState(0);
@@ -11,7 +12,11 @@ const CustomerDetailsDialog = ({ isOpen, onRequestClose, customerDetails }) => {
   const [selectedPayment, setSelectedPayment] = useState(null);
 
   useEffect(() => {
-    if (customerDetails && customerDetails.payments && customerDetails.payments.length > 0) {
+    if (
+      customerDetails &&
+      customerDetails.payments &&
+      customerDetails.payments.length > 0
+    ) {
       const receivedAmount = customerDetails.payments.reduce(
         (acc, payment) => acc + payment.amount,
         0
@@ -43,13 +48,43 @@ const CustomerDetailsDialog = ({ isOpen, onRequestClose, customerDetails }) => {
     return total && total !== 0 ? (value / total) * 100 : 0;
   };
 
-  // Function to format a number as Indian Rupees (INR)
   const formatAsIndianRupees = (amount) => {
     return new Intl.NumberFormat("en-IN", {
       style: "currency",
       currency: "INR",
       minimumFractionDigits: 2,
     }).format(amount);
+  };
+
+  const handleDeletePayment = async (paymentIndex) => {
+    try {
+      const customerID = String(customerDetails.customerID);
+
+      // Get the current payments array
+      const currentPayments = customerDetails.payments || [];
+
+      // Remove the selected payment by index
+      const updatedPayments = [
+        ...currentPayments.slice(0, paymentIndex),
+        ...currentPayments.slice(paymentIndex + 1),
+      ];
+
+      // Update the 'payments' array in the customer document
+      await db.collection("customers").doc(customerID).update({
+        payments: updatedPayments,
+      });
+
+      // Update local state to trigger a re-render
+      setTotalReceivedAmount(
+        updatedPayments.reduce((acc, payment) => acc + payment.amount, 0)
+      );
+      setPendingAmount(
+        Math.max(customerDetails.totalCost - totalReceivedAmount, 0)
+      );
+      window.location.reload();
+    } catch (error) {
+      console.error("Error deleting payment:", error.message);
+    }
   };
 
   const customStyles = {
@@ -81,34 +116,34 @@ const CustomerDetailsDialog = ({ isOpen, onRequestClose, customerDetails }) => {
               <p>
                 <strong>Name:</strong> {customerDetails.name || "N/A"}
               </p>
-              <p>
+              <p className="mn">
                 <strong>Mobile Number:</strong>{" "}
                 {customerDetails.mobile || "N/A"}
               </p>
-              <p>
+              <p className="mn">
                 <strong>Place:</strong> {customerDetails.place || "N/A"}
               </p>
-              <p>
+              <p className="mn">
                 <strong>Age:</strong> {customerDetails.age || "N/A"}
               </p>
-              <p>
+              <p className="mn">
                 <strong>Total Cost:</strong>{" "}
-                {customerDetails.totalCost || "N/A"}
+                {formatAsIndianRupees(customerDetails.totalCost || 0)}
               </p>
-              <p>
+              <p className="mn">
                 <strong>Address:</strong> {customerDetails.address || "N/A"}
               </p>
-              <p>
+              <p className="mn">
                 <strong>Start Date:</strong>{" "}
                 {customerDetails.startDate || "N/A"}
               </p>
-              <p>
+              <p className="mn">
                 <strong>End Date:</strong> {customerDetails.endDate || "N/A"}
               </p>
-              <p>
+              <p className="mn">
                 <strong>Status:</strong> {customerDetails.status || "N/A"}
               </p>
-              <p>
+              <p className="mn">
                 <strong>Payments Done:</strong>
               </p>
 
@@ -195,24 +230,49 @@ const CustomerDetailsDialog = ({ isOpen, onRequestClose, customerDetails }) => {
                   </p>
                 </div>
               </div>
-
               <div className="payment-list-container">
                 <ul>
                   {customerDetails.payments?.length > 0 ? (
-                    customerDetails.payments
-                      .sort((a, b) => new Date(b.date) - new Date(a.date)) // Sort payments by date in descending order
-                      .map((payment, index) => (
-                        <li key={index}>
-                          <strong>Amount:</strong> {payment.amount},{" "}
-                          <strong>Date:</strong> {payment.date},{" "}
-                          <strong>Time:</strong> {payment.time}
-                          <span className="material-icons" style={{ cursor: "pointer", color: '#BE3144' }} onClick={() => handleEditPayment(payment)}>
-                            edit
-                          </span>
-                        </li>
-                      ))
+                    <table className="payment-table">
+                      <thead>
+                        <tr>
+                          <th>Amount</th>
+                          <th>Date</th>
+                          <th>Time</th>
+                          <th>Edit</th>
+                          <th>Delete</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {customerDetails.payments
+                          .sort((a, b) => new Date(b.date) - new Date(a.date))
+                          .map((payment, index) => (
+                            <tr key={index} className="payment-item">
+                              <td>{formatAsIndianRupees(payment.amount)}</td>
+                              <td>{payment.date}</td>
+                              <td>{payment.time}</td>
+                              <td>
+                                <span
+                                  className="material-icons edit-icon"
+                                  onClick={() => handleEditPayment(payment)}
+                                >
+                                  edit
+                                </span>
+                              </td>
+                              <td>
+                                <span
+                                  className="material-icons delete-icon"
+                                  onClick={() => handleDeletePayment(index)}
+                                >
+                                  delete
+                                </span>
+                              </td>
+                            </tr>
+                          ))}
+                      </tbody>
+                    </table>
                   ) : (
-                    <li>No payments available</li>
+                    <p>No payments available</p>
                   )}
                 </ul>
               </div>
