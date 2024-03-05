@@ -151,16 +151,16 @@ const AddCustomerModal = ({ isOpen, onRequestClose, isMobileUnique, setIsMobileU
   };
 
 
-  // Custom styles for the modal
-  const customStyles = {
-    content: {
-      width: '1100px', // Set your custom width here
-      height: '600px', // Set your custom height here
-      margin: 'auto', // Center the modal
-      padding: '0', 
-      overflow: 'auto', // Allow scrolling if content overflows
-    },
-  };
+  // // Custom styles for the modal
+  // const customStyles = {
+  //   content: {
+  //     width: '1100px', // Set your custom width here
+  //     height: '600px', // Set your custom height here
+  //     margin: 'auto', // Center the modal
+  //     padding: '0', 
+  //     overflow: 'auto', // Allow scrolling if content overflows
+  //   },
+  // };
 
 
   // Function to check the uniqueness of a mobile number in the 'customers' collection
@@ -223,9 +223,10 @@ const handleSave = async () => {
 
   return (
     <Modal
+      className= 'customStyles'
       isOpen={isOpen}
       contentLabel="Add Customer Modal"
-      style={customStyles} // Apply the custom styles
+      // style={customStyles} // Apply the custom styles
     >
       <div className='add-customer-dialog'>
       <h2  className='add-customer-heading'>Add Customer</h2>
@@ -274,12 +275,12 @@ const handleSave = async () => {
         </label>
       </div>
       <div>
-        <button className="right-bottom-button-cancel" onClick={() => {
+        <button className="right1-bottom-button-cancel" onClick={() => {
             resetErrors(); 
             onRequestClose();}}>Cancel</button>
       </div>
       <div>
-        <button  className="right-bottom-button-save" onClick={handleSave}>Save</button>
+        <button  className="right1-bottom-button-save" onClick={handleSave}>Save</button>
       </div>
       </div>
     </Modal>
