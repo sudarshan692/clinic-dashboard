@@ -8,8 +8,11 @@ import EditCustomerModal from "../EditCustomerModal/EditCustomerModal";
 import "./dashboard.css";
 import Modal from "react-modal";
 import { CircularProgressbar } from "react-circular-progressbar";
+import CustomerBarChart from "../CustomerBarChart/CustomerBarChart";
+import CustomerSnackbar from "../shared/CustomerSnackbar";
+import ExportData from "../ExportCustomerData/ExportData";
+import LogoutOnClose from "../LogoutOnClose/LogoutOnClose";
 
-// Define your CustomAlert component
 const CustomAlert = ({ message, onConfirm, onCancel }) => {
   const customStyles = {
     content: {
@@ -52,11 +55,35 @@ const Dashboard = () => {
   const [customerToDelete, setCustomerToDelete] = useState(null);
   const [totalCost, setTotalCost] = useState(0);
   const [totalAmountReceived, setTotalAmountReceived] = useState(0);
+  const [isBarGraphModalOpen, setIsBarGraphModalOpen] = useState(false);
+  const [showSnackbar, setShowSnackbar] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [isEditMade, setIsEditMade] = useState(false);
+
+  useEffect(() => {
+    const user = auth.currentUser;
+    if (user) {
+      fetchCustomers();
+    }
+  }, []);
+
+  useEffect(() => {
+    // console.log("Calling fetchCustomers from useEffect...");
+    if (!isAddCustomerModalOpen && !isEditCustomerModalOpen && isEditMade) {
+      console.log("fetch");
+      fetchCustomers();
+    } else {
+      console.log(
+        "Database call unnecessary as Add/Edit Customer modal is open."
+      );
+    }
+  }, [isAddCustomerModalOpen, isEditCustomerModalOpen, isEditMade]);
 
   // Function to fetch customer data from the Firestore database
   const fetchCustomers = async () => {
     try {
       setLoading(true);
+      // console.log("Fetching customers from the database...");
       // Retrieve customer data from the 'customers' collection
       const snapshot = await db.collection("customers").get();
       // Map Firestore documents to an array of customer objects with unique IDs
@@ -87,6 +114,7 @@ const Dashboard = () => {
 
       // Set the customer data state with the retrieved data
       setCustomers(customerData);
+      console.log("Customers fetched successfully");
     } catch (error) {
       console.error("Error fetching customers:", error.message);
     } finally {
@@ -94,6 +122,24 @@ const Dashboard = () => {
     }
   };
 
+  const handleAddSnackbar = async () => {
+    // Set the state to show the snackbar
+    setShowSnackbar(true);
+    setSnackbarMessage("Customer Added Successfully!");
+    // Fetch customers after adding a new customer
+    await fetchCustomers();
+  };
+
+  const handleDeleteSnackbar = () => {
+    // Set the state to show the snackbar
+    setShowSnackbar(true);
+    setSnackbarMessage("Customer Deleted Successfully!");
+  };
+  const handleEditSnackbar = () => {
+    // Set the state to show the snackbar
+    setShowSnackbar(true);
+    setSnackbarMessage("Customer Edited Successfully!");
+  };
   // Function to format a number as Indian Rupees (INR)
   const formatAsIndianRupees = (amount) => {
     return new Intl.NumberFormat("en-IN", {
@@ -101,29 +147,6 @@ const Dashboard = () => {
       currency: "INR",
       minimumFractionDigits: 2,
     }).format(amount);
-  };
-
-  // useEffect hook to fetch customer data when the modal is opened or closed
-  useEffect(() => {
-    fetchCustomers();
-  }, [isAddCustomerModalOpen]);
-
-  // Function to handle user logout and redirect to the login page
-  const handleLogout = async () => {
-    try {
-      setLoading(true);
-      // Sign out the authenticated user using Firebase authentication
-      await auth.signOut();
-      // Redirect to the login page after a short delay (1 second)
-      setTimeout(() => {
-        history.push("/login");
-      }, 1000);
-      console.log("Logout successful");
-    } catch (error) {
-      console.error("Error logging out:", error.message);
-    } finally {
-      setLoading(false);
-    }
   };
 
   // Function to count the number of customers in progress, completed, and total customers
@@ -177,29 +200,35 @@ const Dashboard = () => {
     setCustomerToDelete(null);
   };
 
-  // Updated handleDelete function to use custom alert
-  const handleDelete = (uniqueID) => {
-    const customer = customers.find((c) => c.uniqueID === uniqueID);
-    if (customer) {
-      openCustomAlert(customer);
-    }
-  };
-
   // Function to open the Add Customer modal
   const openAddCustomerModal = () => {
     setIsAddCustomerModalOpen(true);
+  };
+
+  // Function to close the Add Customer modal
+  const closeAddCustomerModal = () => {
+    setIsMobileUnique(true);
+    setIsAddCustomerModalOpen(false);
   };
 
   // Function to open the Edit Customer modal and set the current customer data
   const openEditCustomerModal = (customerData) => {
     setIsEditCustomerModalOpen(true);
     setEditCustomerData(customerData);
+    setIsEditMade(false); // Reset the edit made flag when opening the modal
   };
 
   // Function to close the Edit Customer modal
   const closeEditCustomerModal = () => {
     setIsEditCustomerModalOpen(false);
     setEditCustomerData(null);
+  };
+
+  // Function to handle the edit action
+  const onEdit = (customerData) => {
+    // Logic for handling the edit action
+    // console.log("Edit button clicked for:", customerData);
+    openEditCustomerModal(customerData);
   };
 
   // Function to delete a customer from the database
@@ -212,6 +241,7 @@ const Dashboard = () => {
         await db.collection("customers").doc(uniqueID).delete();
         // Refetch the updated customer list
         fetchCustomers();
+        handleDeleteSnackbar();
       } else {
         console.error("Error deleting customer: Invalid document ID");
       }
@@ -222,24 +252,47 @@ const Dashboard = () => {
     }
   };
 
-  // Function to close the Add Customer modal
-  const closeAddCustomerModal = () => {
-    setIsMobileUnique(true);
-    setIsAddCustomerModalOpen(false);
+  // Updated handleDelete function to use custom alert
+  const handleDelete = (uniqueID) => {
+    const customer = customers.find((c) => c.uniqueID === uniqueID);
+    if (customer) {
+      openCustomAlert(customer);
+    }
   };
 
-  // Function to handle the edit action
-  const onEdit = (customerData) => {
-    // Logic for handling the edit action
-    console.log("Edit button clicked for:", customerData);
-    openEditCustomerModal(customerData);
+  // Function to handle user logout and redirect to the login page
+  const handleLogout = async () => {
+    try {
+      setLoading(true);
+      // Sign out the authenticated user using Firebase authentication
+      await auth.signOut();
+      // Redirect to the login page after a short delay (1 second)
+      setTimeout(() => {
+        history.push("/login");
+      }, 1000);
+      console.log("Logout successful");
+    } catch (error) {
+      console.error("Error logging out:", error.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   // JSX for rendering the Dashboard component
   return (
     <div className="container">
+         <LogoutOnClose />
       <h1 className="heading">Welcome to Piles Clinic Dashboard</h1>
-      <button className="logout-btn" onClick={handleLogout}>
+      <button
+        className="logout-btn"
+        onClick={handleLogout}
+        onMouseEnter={(e) => {
+          e.target.style.backgroundColor = "#0d2136";
+        }}
+        onMouseLeave={(e) => {
+          e.target.style.backgroundColor = "#3f51b5";
+        }}
+      >
         Logout
       </button>
       {loading ? (
@@ -248,12 +301,15 @@ const Dashboard = () => {
         </div>
       ) : (
         // Display the CustomerTable component with customer data and onDelete function
+        <>
         <CustomerTable
           data={customers}
           onDelete={handleDelete}
           onEdit={onEdit}
           onPaymentAdded={fetchCustomers}
         />
+       
+      </>
       )}
       {isCustomAlertOpen && (
         <CustomAlert
@@ -284,7 +340,7 @@ const Dashboard = () => {
             },
             text: {
               fill: "#fff",
-              fontSize: "25px",
+              fontSize: "23px",
               dominantBaseline: "middle", // Vertical centering
               textAnchor: "middle", // Horizontal centering
             },
@@ -317,7 +373,7 @@ const Dashboard = () => {
             },
             text: {
               fill: "#fff",
-              fontSize: "25px",
+              fontSize: "23px",
               dominantBaseline: "middle", // Vertical centering
               textAnchor: "middle", // Horizontal centering
             },
@@ -350,7 +406,7 @@ const Dashboard = () => {
             },
             text: {
               fill: "#fff",
-              fontSize: "25px",
+              fontSize: "23px",
               dominantBaseline: "middle", // Vertical centering
               textAnchor: "middle", // Horizontal centering
             },
@@ -384,7 +440,7 @@ const Dashboard = () => {
             },
             text: {
               fill: "#fff",
-              fontSize: "25px",
+              fontSize: "23px",
               dominantBaseline: "middle", // Vertical centering
               textAnchor: "middle", // Horizontal centering
             },
@@ -396,20 +452,45 @@ const Dashboard = () => {
           <p className="total-income-pending">
             P: {formatAsIndianRupees(totalPendingAmount)}
           </p>
-          <p className="total-income">
-            T: {formatAsIndianRupees(totalCost)}
-          </p>
+          <p className="total-income">T: {formatAsIndianRupees(totalCost)}</p>
         </div>
       </div>
 
-      <button className="add-customer-btn" onClick={openAddCustomerModal}>
+     
+      <ExportData data={customers} />
+      <button
+        className="view-bar-graph-btn"
+        onClick={() => setIsBarGraphModalOpen(true)}
+        onMouseEnter={(e) => {
+          e.target.style.backgroundColor = "#0d2136";
+        }}
+        onMouseLeave={(e) => {
+          e.target.style.backgroundColor = "#3f51b5";
+        }}
+      >
+        View Bar Graph
+      </button>
+
+      <button
+        className="add-customer-btn"
+        onClick={openAddCustomerModal}
+        onMouseEnter={(e) => {
+          e.target.style.backgroundColor = "#162c46";
+        }}
+        onMouseLeave={(e) => {
+          e.target.style.backgroundColor = "#3f51b5";
+        }}
+      >
         Add Customer
       </button>
+
+
       <AddCustomerModal
         isOpen={isAddCustomerModalOpen}
         onRequestClose={closeAddCustomerModal}
         isMobileUnique={isMobileUnique}
         setIsMobileUnique={setIsMobileUnique}
+        onCustomerAdded={handleAddSnackbar}
       />
       <EditCustomerModal
         isOpen={isEditCustomerModalOpen}
@@ -417,11 +498,62 @@ const Dashboard = () => {
         initialData={editCustomerData}
         isMobileUnique={isMobileUnique}
         setIsMobileUnique={setIsMobileUnique}
+        onCustomerEdited={handleEditSnackbar}
         onEditSuccess={() => {
           closeEditCustomerModal();
           fetchCustomers();
         }}
       />
+      <Modal
+        isOpen={isBarGraphModalOpen}
+        onRequestClose={() => setIsBarGraphModalOpen(false)}
+        contentLabel="Bar Graph Modal"
+        style={{
+          content: {
+            width: "55%",
+            height: "50%",
+            margin: "auto",
+            borderRadius: "10px",
+            border: "10px",
+            backgroundColor: "#0d2136",
+            overflow: "hidden",
+          },
+        }}
+      >
+        <button
+          style={{
+            position: "absolute",
+            top: "460px",
+            right: "15px",
+            backgroundColor: "#3f51b5",
+            padding: "5px",
+            borderWidth: "0px",
+            borderRadius: "5px",
+            width: "60px",
+            fontSize: "12px",
+            color: "#fff",
+            cursor: "pointer",
+            transition: "background-color 0.3s ease",
+          }}
+          onClick={() => setIsBarGraphModalOpen(false)}
+          onMouseEnter={(e) => {
+            e.target.style.backgroundColor = "#162c46";
+          }}
+          onMouseLeave={(e) => {
+            e.target.style.backgroundColor = "#3f51b5";
+          }}
+        >
+          Close
+        </button>
+        <CustomerBarChart />
+      </Modal>
+      {showSnackbar && (
+        <CustomerSnackbar
+          message={snackbarMessage}
+          duration={3000}
+          onClose={() => setShowSnackbar(false)}
+        />
+      )}
     </div>
   );
 };

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Modal from 'react-modal';
 import { db, firebase } from '../shared/firebase';
 import './addPaymentModal.css';
@@ -6,6 +6,18 @@ import './addPaymentModal.css';
 const AddPaymentModal = ({ isOpen, onRequestClose, selectedCustomer, onPaymentAdded }) => {
   const [paymentAmount, setPaymentAmount] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  useEffect(() => {
+    // Update the isModalOpen state when the modal is opened or closed
+    setIsModalOpen(isOpen);
+
+    // Reset the error message when the modal is closed
+    if (!isOpen) {
+      setPaymentAmount('');
+      setErrorMessage('');
+    }
+  }, [isOpen]);
 
   const handleInputChange = (e) => {
     setPaymentAmount(e.target.value);
@@ -82,8 +94,13 @@ const AddPaymentModal = ({ isOpen, onRequestClose, selectedCustomer, onPaymentAd
 
   return (
     <Modal
-      isOpen={isOpen}
-      onRequestClose={onRequestClose}
+      isOpen={isModalOpen}
+      onRequestClose={() => {
+        onRequestClose();
+        // Additional cleanup if needed
+        setPaymentAmount('');
+        setErrorMessage('');
+      }}
       contentLabel="Add Payment Modal"
       style={customStyles}
     >
@@ -94,11 +111,11 @@ const AddPaymentModal = ({ isOpen, onRequestClose, selectedCustomer, onPaymentAd
             <input className='payment-input' type="text" value={paymentAmount} onChange={handleInputChange}  disabled={selectedCustomer.endDate !== ''} />
           </label>
           <div>
-            <button class="right-bottom-button-cancel" onClick={onRequestClose}>Cancel</button>
+            <button className="right-bottom-button-cancel" onClick={onRequestClose}>Cancel</button>
           </div>
           <div>
             <button
-              class="right-bottom-button-save"
+              className="right-bottom-button-save"
               onClick={handleSave}
               disabled={selectedCustomer.endDate !== '' || !!errorMessage} // Disable if endDate is not an empty string or if there is an error message
             >
@@ -107,7 +124,7 @@ const AddPaymentModal = ({ isOpen, onRequestClose, selectedCustomer, onPaymentAd
           </div>
         </div>
         {errorMessage && (
-          <div className='error-message'>
+          <div className='add-payment-error-message'>
             {errorMessage}
           </div>
         )}

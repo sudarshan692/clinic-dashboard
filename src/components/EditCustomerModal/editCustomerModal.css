@@ -31,6 +31,10 @@
     margin-right: 50px;
     margin-top: 10px;
   }
+  .container1 input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+    margin-left: 260px;
+  }
 .all-label {
     margin-top: 20px;
     color: rgb(211, 227, 253);
