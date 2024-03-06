@@ -190,9 +190,12 @@ const AddCustomerModal = ({ isOpen, onRequestClose, isMobileUnique, setIsMobileU
 const handleSave = async () => {
   try {
     resetErrors();
-    if (!validateInputs() || customerCount >= 2) {
-      onRequestClose();
-      onCustomerCount();
+    if (!validateInputs() || customerCount >= 3) {
+      if(customerCount >=3){
+        onRequestClose();
+        onCustomerCount();
+      }
+
       return;
     }
     // Check if the mobile number is unique
