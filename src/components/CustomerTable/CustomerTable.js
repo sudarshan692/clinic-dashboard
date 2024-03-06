@@ -41,6 +41,14 @@ const CustomerTable = ({ data, onDelete, onEdit, onPaymentAdded }) => {
     onPaymentAdded();  
   };
 
+  const formatAsIndianRupees = (amount) => {
+    return new Intl.NumberFormat("en-IN", {
+      style: "currency",
+      currency: "INR",
+      minimumFractionDigits: 2,
+    }).format(amount);
+  };
+
   const handleRowClick = (row) => {
     // Display customer details dialog on row click
     setSelectedCustomerDetails(row);
@@ -64,7 +72,7 @@ const CustomerTable = ({ data, onDelete, onEdit, onPaymentAdded }) => {
     { name: "Mobile Number", selector: (row) => row.mobile || '-', sortable: true },
     { name: "Place", selector: (row) => row.place || '-', sortable: true },
     { name: "Age", selector: (row) => row.age || '-', sortable: true },
-    { name: "Total Cost", selector: (row) => row.totalCost || '-', sortable: true },
+    { name: "Total Cost", selector: (row) => formatAsIndianRupees(row.totalCost || '-'), sortable: true },
     { name: "Address", selector: (row) => row.address || '-', sortable: true },
     { name: "Start Date", selector: (row) => row.startDate || '-', sortable: true },
     { name: "End Date", selector: (row) => row.endDate || '-', sortable: true }, // Display 'N/A' if endDate is not available
@@ -199,7 +207,6 @@ const CustomerTable = ({ data, onDelete, onEdit, onPaymentAdded }) => {
           onRowClicked={handleRowClick}
           noDataComponent={<CustomNoDataComponent />}
         />
-         {/* Render the AddPaymentModal */}
       <AddPaymentModal
         isOpen={isAddPaymentModalOpen}
         onRequestClose={closeAddPaymentModal}

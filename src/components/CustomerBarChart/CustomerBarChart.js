@@ -58,6 +58,7 @@ const CustomerBarChart = () => {
 
       setCustomerCountData(customerCountArray);
       setLoading(false); // Set loading to false after data is fetched
+      console.log("Customers fetched successfully");
     } catch (error) {
       console.error("Error fetching customer data:", error.message);
       setLoading(false); // Set loading to false in case of an error
@@ -65,16 +66,8 @@ const CustomerBarChart = () => {
   };
 
   useEffect(() => {
-    // Fetch data for the initial current year
     fetchCustomerData(currentYear);
   }, [currentYear]);
-
-  useEffect(() => {
-    // Fetch data again whenever customerCountData changes
-    if (!loading) {
-      fetchCustomerData(currentYear);
-    }
-  }, [customerCountData, currentYear, loading]);
 
   const monthNames = [
     "Jan",

@@ -46,3 +46,29 @@ th:hover .sort-icon {
   background: rgba(0,0,0,.54);; /* Specify the background color on hover */
 }
 
+@media only screen and (max-width: 600px) {
+  .search-container {
+    display: flex;
+    justify-content: flex-end;
+    margin-right: 45px;
+  
+  }
+  .search-input {
+    background-color: #162c46;
+    color: white;
+    padding: 5px;
+    border: 0;
+    /* border: 1px solid #3f51b5; */
+    border-radius: 4px;
+    width: 200px;
+    margin-bottom: 10px;
+    margin-top: 46px;
+    font-size: 0.7em;
+  }
+  .table{
+    font-size: 0.1em;
+    margin-left: 5px;
+    margin-right: 5px;
+  }
+
+}

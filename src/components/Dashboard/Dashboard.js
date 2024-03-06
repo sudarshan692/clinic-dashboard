@@ -9,6 +9,9 @@ import "./dashboard.css";
 import Modal from "react-modal";
 import { CircularProgressbar } from "react-circular-progressbar";
 import CustomerBarChart from "../CustomerBarChart/CustomerBarChart";
+import CustomerSnackbar from "../shared/CustomerSnackbar";
+import ExportData from "../ExportCustomerData/ExportData";
+import LogoutOnClose from "../LogoutOnClose/LogoutOnClose";
 
 const CustomAlert = ({ message, onConfirm, onCancel }) => {
   const customStyles = {
@@ -53,11 +56,34 @@ const Dashboard = () => {
   const [totalCost, setTotalCost] = useState(0);
   const [totalAmountReceived, setTotalAmountReceived] = useState(0);
   const [isBarGraphModalOpen, setIsBarGraphModalOpen] = useState(false);
+  const [showSnackbar, setShowSnackbar] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [isEditMade, setIsEditMade] = useState(false);
+
+  useEffect(() => {
+    const user = auth.currentUser;
+    if (user) {
+      fetchCustomers();
+    }
+  }, []);
+
+  useEffect(() => {
+    // console.log("Calling fetchCustomers from useEffect...");
+    if (!isAddCustomerModalOpen && !isEditCustomerModalOpen && isEditMade) {
+      console.log("fetch");
+      fetchCustomers();
+    } else {
+      console.log(
+        "Database call unnecessary as Add/Edit Customer modal is open."
+      );
+    }
+  }, [isAddCustomerModalOpen, isEditCustomerModalOpen, isEditMade]);
 
   // Function to fetch customer data from the Firestore database
   const fetchCustomers = async () => {
     try {
       setLoading(true);
+      // console.log("Fetching customers from the database...");
       // Retrieve customer data from the 'customers' collection
       const snapshot = await db.collection("customers").get();
       // Map Firestore documents to an array of customer objects with unique IDs
@@ -88,6 +114,7 @@ const Dashboard = () => {
 
       // Set the customer data state with the retrieved data
       setCustomers(customerData);
+      console.log("Customers fetched successfully");
     } catch (error) {
       console.error("Error fetching customers:", error.message);
     } finally {
@@ -95,11 +122,24 @@ const Dashboard = () => {
     }
   };
 
-  // useEffect hook to fetch customer data when the modal is opened or closed
-  useEffect(() => {
-    fetchCustomers();
-  }, [isAddCustomerModalOpen]);
+  const handleAddSnackbar = async () => {
+    // Set the state to show the snackbar
+    setShowSnackbar(true);
+    setSnackbarMessage("Customer Added Successfully!");
+    // Fetch customers after adding a new customer
+    await fetchCustomers();
+  };
 
+  const handleDeleteSnackbar = () => {
+    // Set the state to show the snackbar
+    setShowSnackbar(true);
+    setSnackbarMessage("Customer Deleted Successfully!");
+  };
+  const handleEditSnackbar = () => {
+    // Set the state to show the snackbar
+    setShowSnackbar(true);
+    setSnackbarMessage("Customer Edited Successfully!");
+  };
   // Function to format a number as Indian Rupees (INR)
   const formatAsIndianRupees = (amount) => {
     return new Intl.NumberFormat("en-IN", {
@@ -175,6 +215,7 @@ const Dashboard = () => {
   const openEditCustomerModal = (customerData) => {
     setIsEditCustomerModalOpen(true);
     setEditCustomerData(customerData);
+    setIsEditMade(false); // Reset the edit made flag when opening the modal
   };
 
   // Function to close the Edit Customer modal
@@ -186,7 +227,7 @@ const Dashboard = () => {
   // Function to handle the edit action
   const onEdit = (customerData) => {
     // Logic for handling the edit action
-    console.log("Edit button clicked for:", customerData);
+    // console.log("Edit button clicked for:", customerData);
     openEditCustomerModal(customerData);
   };
 
@@ -200,6 +241,7 @@ const Dashboard = () => {
         await db.collection("customers").doc(uniqueID).delete();
         // Refetch the updated customer list
         fetchCustomers();
+        handleDeleteSnackbar();
       } else {
         console.error("Error deleting customer: Invalid document ID");
       }
@@ -239,6 +281,7 @@ const Dashboard = () => {
   // JSX for rendering the Dashboard component
   return (
     <div className="container">
+         <LogoutOnClose />
       <h1 className="heading">Welcome to Piles Clinic Dashboard</h1>
       <button
         className="logout-btn"
@@ -258,12 +301,15 @@ const Dashboard = () => {
         </div>
       ) : (
         // Display the CustomerTable component with customer data and onDelete function
+        <>
         <CustomerTable
           data={customers}
           onDelete={handleDelete}
           onEdit={onEdit}
           onPaymentAdded={fetchCustomers}
         />
+       
+      </>
       )}
       {isCustomAlertOpen && (
         <CustomAlert
@@ -294,7 +340,7 @@ const Dashboard = () => {
             },
             text: {
               fill: "#fff",
-              fontSize: "25px",
+              fontSize: "23px",
               dominantBaseline: "middle", // Vertical centering
               textAnchor: "middle", // Horizontal centering
             },
@@ -327,7 +373,7 @@ const Dashboard = () => {
             },
             text: {
               fill: "#fff",
-              fontSize: "25px",
+              fontSize: "23px",
               dominantBaseline: "middle", // Vertical centering
               textAnchor: "middle", // Horizontal centering
             },
@@ -360,7 +406,7 @@ const Dashboard = () => {
             },
             text: {
               fill: "#fff",
-              fontSize: "25px",
+              fontSize: "23px",
               dominantBaseline: "middle", // Vertical centering
               textAnchor: "middle", // Horizontal centering
             },
@@ -394,7 +440,7 @@ const Dashboard = () => {
             },
             text: {
               fill: "#fff",
-              fontSize: "25px",
+              fontSize: "23px",
               dominantBaseline: "middle", // Vertical centering
               textAnchor: "middle", // Horizontal centering
             },
@@ -410,6 +456,8 @@ const Dashboard = () => {
         </div>
       </div>
 
+     
+      <ExportData data={customers} />
       <button
         className="view-bar-graph-btn"
         onClick={() => setIsBarGraphModalOpen(true)}
@@ -436,11 +484,13 @@ const Dashboard = () => {
         Add Customer
       </button>
 
+
       <AddCustomerModal
         isOpen={isAddCustomerModalOpen}
         onRequestClose={closeAddCustomerModal}
         isMobileUnique={isMobileUnique}
         setIsMobileUnique={setIsMobileUnique}
+        onCustomerAdded={handleAddSnackbar}
       />
       <EditCustomerModal
         isOpen={isEditCustomerModalOpen}
@@ -448,6 +498,7 @@ const Dashboard = () => {
         initialData={editCustomerData}
         isMobileUnique={isMobileUnique}
         setIsMobileUnique={setIsMobileUnique}
+        onCustomerEdited={handleEditSnackbar}
         onEditSuccess={() => {
           closeEditCustomerModal();
           fetchCustomers();
@@ -496,6 +547,13 @@ const Dashboard = () => {
         </button>
         <CustomerBarChart />
       </Modal>
+      {showSnackbar && (
+        <CustomerSnackbar
+          message={snackbarMessage}
+          duration={3000}
+          onClose={() => setShowSnackbar(false)}
+        />
+      )}
     </div>
   );
 };
