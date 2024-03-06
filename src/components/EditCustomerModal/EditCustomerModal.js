@@ -7,12 +7,27 @@ const EditCustomerModal = ({ isOpen, onRequestClose, initialData, isMobileUnique
   const [editedData, setEditedData] = useState({
     name: '',
     mobile: '',
+    place: '',
+    address: '',
+    age: '',
+    totalCost: '',
+    startDate: '',
     endDate: '',
     status: '',
   });
 
   const [errorMessage, setErrorMessage] = useState('');
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+
+
+  const [nameError, setNameError] = useState("");
+  const [mobileError, setMobileError] = useState("");
+  const [placeError, setPlaceError] = useState("");
+  // const [addressError, setAddressError] = useState("");
+  const [ageError, setAgeError] = useState("");
+  const [totalCostError, setTotalCostError] = useState("");
+  const [startDateError, setStartDateError] = useState("");
+
 
   useEffect(() => {
     setEditedData({ ...initialData });
@@ -35,8 +50,94 @@ const EditCustomerModal = ({ isOpen, onRequestClose, initialData, isMobileUnique
       setHasUnsavedChanges(isValueChanged);
   };
 
+  const validateInputs = () => {
+    let isValid = true;
+
+    // Name validation
+    if (!editedData.name.trim()) {
+      setNameError("Name is required");
+      isValid = false;
+    } else {
+      setNameError("");
+    }
+
+    // Mobile validation
+    if (!editedData.mobile.trim()) {
+      setMobileError("Mobile number is required");
+      isValid = false;
+    } else if (!/^\d{10}$/.test(editedData.mobile)) {
+      setMobileError("Invalid mobile number");
+      isValid = false;
+    } else {
+      setMobileError("");
+    }
+
+    // Place validation
+    if (!editedData.place.trim()) {
+      setPlaceError("Place is required");
+      isValid = false;
+    } else {
+      setPlaceError("");
+    }
+
+    // // Address validation
+    // if (!editedData.address.trim()) {
+    //   setAddressError("Address is required");
+    //   isValid = false;
+    // } else {
+    //   setAddressError("");
+    // }
+
+    // Age validation
+    if (!editedData.age.trim()) {
+      setAgeError("Age is required");
+      isValid = false;
+    } else if (isNaN(editedData.age) || parseInt(editedData.age) <= 0) {
+      setAgeError("Invalid age");
+      isValid = false;
+    } else {
+      setAgeError("");
+    }
+
+    // Total Cost validation
+    if (!editedData.totalCost.trim()) {
+      setTotalCostError("Total Cost is required");
+      isValid = false;
+    } else if (isNaN(editedData.totalCost) || parseFloat(editedData.totalCost) < 0) {
+      setTotalCostError("Invalid total cost");
+      isValid = false;
+    } else {
+      setTotalCostError("");
+    }
+
+    // Start Date validation
+    if (!editedData.startDate.trim()) {
+      setStartDateError("Start Date is required");
+      isValid = false;
+    } else {
+      setStartDateError("");
+    }
+
+    return isValid;
+  };
+
+    // Function to reset errors
+    const resetErrors = () => {
+      setNameError('');
+      setMobileError('');
+      setPlaceError('');
+      // setAddressError('');
+      setAgeError('');
+      setTotalCostError('');
+      setStartDateError('');
+    };
+
   const handleSave = async () => {
     try {
+      resetErrors();
+      if (!validateInputs()) {
+        return;
+      }
       const isUnique = await checkMobileNumberUnique(editedData.mobile, initialData.uniqueID);
   
       if (isUnique) {
@@ -130,35 +231,42 @@ const EditCustomerModal = ({ isOpen, onRequestClose, initialData, isMobileUnique
         <div className='container1'>
           <label className='all-label'>Name *
             <input className='inputbox1' placeholder='Name' type="text" name="name" value={editedData.name || ''} onChange={handleInputChange} />
+            <div className="error-messages">{nameError}</div>
           </label>
           <label className='all-label'>Mobile Number *
             <input className='inputbox1' placeholder='Mobile Number' type="text" name="mobile" value={editedData.mobile || ''} onChange={handleInputChange} />
             {isMobileUnique ? null : (
               <div style={{ color: 'red' }}>Mobile number must be unique</div>
             )}
+            <div className="error-messages">{mobileError}</div>  
           </label>
         </div>
 
         <div className='container1'>
           <label className='all-label'>Place *
             <input className='inputbox1' placeholder='Place' type="text" name="place" value={editedData.place || ''} onChange={handleInputChange} />
+            <div className="error-messages">{placeError}</div>  
           </label>
           <label className='all-label'>Address *
             <input className='inputbox1' placeholder='Address' type="text" name="address" value={editedData.address || ''} onChange={handleInputChange} />
+               {/* <div className="error-messages">{addressError}</div>   */}
           </label>
         </div>
 
         <div className='container1'>
           <label className='all-label'>Age *
             <input className='inputbox1' placeholder='Age' type="text" name="age" value={editedData.age || ''} onChange={handleInputChange} />
+            <div className="error-messages">{ageError}</div> 
           </label>
           <label className='all-label'>Total Cost *
             <input className='inputbox1' placeholder='Total Cost' type="text" name="totalCost" value={editedData.totalCost || ''} onChange={handleInputChange} />
+            <div className="error-messages">{totalCostError}</div> 
           </label>
         </div>
         <div className='container1'>
           <label className='all-label'>Start Date *
             <input className='inputbox1'type="date" name="startDate" value={editedData.startDate || ''} onChange={handleInputChange} />
+            <div className="error-messages">{startDateError}</div> 
           </label>
           <label className='all-label'>End Date *
             <input className='inputbox1' type="date" name="endDate" value={editedData.endDate || ''} onChange={handleInputChange} />
