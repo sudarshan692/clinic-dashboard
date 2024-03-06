@@ -26,6 +26,12 @@ const AddCustomerModal = ({ isOpen, onRequestClose, isMobileUnique, setIsMobileU
   const [totalCostError, setTotalCostError] = useState("");
   const [startDateError, setStartDateError] = useState("");
 
+  useEffect(() => {
+    if (isOpen) {
+      resetErrors();
+    }
+  }, [isOpen]);
+  
   // useEffect hook to fetch the maximum customer ID when the modal is opened
   useEffect(() => {
     const fetchData = async () => {
