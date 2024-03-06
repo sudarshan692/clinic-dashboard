@@ -129,6 +129,11 @@ const Dashboard = () => {
     await fetchCustomers();
   };
 
+  const handleCustomerCountSnackbar = async () => {
+    setShowSnackbar(true);
+    setSnackbarMessage("Customer limit exceeded!");
+  };
+
   const handleDeleteSnackbar = () => {
     // Set the state to show the snackbar
     setShowSnackbar(true);
@@ -489,6 +494,7 @@ const Dashboard = () => {
         isMobileUnique={isMobileUnique}
         setIsMobileUnique={setIsMobileUnique}
         onCustomerAdded={handleAddSnackbar}
+        onCustomerCount = {handleCustomerCountSnackbar}
       />
       <EditCustomerModal
         isOpen={isEditCustomerModalOpen}
