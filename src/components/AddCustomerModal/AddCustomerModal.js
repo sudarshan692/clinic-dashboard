@@ -4,7 +4,7 @@ import { db } from '../shared/firebase'; // Assuming you have a 'db' instance fr
 import './addCustomerModal.css';
 
 // Functional component for the Add Customer Modal
-const AddCustomerModal = ({ isOpen, onRequestClose, isMobileUnique, setIsMobileUnique, onCustomerAdded  }) => {
+const AddCustomerModal = ({ isOpen, onRequestClose, isMobileUnique, setIsMobileUnique, onCustomerAdded, onCustomerCount  }) => {
   // State to manage customer data and initialize it with default values
   const [customerData, setCustomerData] = useState({
     customerID: '',
@@ -16,6 +16,7 @@ const AddCustomerModal = ({ isOpen, onRequestClose, isMobileUnique, setIsMobileU
     totalCost: '',
     startDate: '',
   });
+  const [customerCount, setCustomerCount] = useState(0);
 
   const [nameError, setNameError] = useState("");
   const [mobileError, setMobileError] = useState("");
@@ -25,19 +26,26 @@ const AddCustomerModal = ({ isOpen, onRequestClose, isMobileUnique, setIsMobileU
   const [totalCostError, setTotalCostError] = useState("");
   const [startDateError, setStartDateError] = useState("");
 
+  useEffect(() => {
+    if (isOpen) {
+      resetErrors();
+    }
+  }, [isOpen]);
+  
   // useEffect hook to fetch the maximum customer ID when the modal is opened
   useEffect(() => {
-    const fetchMaxCustomerID = async () => {
+    const fetchData = async () => {
       try {
         // Query the 'customers' collection to get the document with the maximum customerID
-        const snapshot = await db
+        const maxCustomerSnapshot = await db
           .collection('customers')
           .orderBy('customerID', 'desc')
           .limit(1)
           .get();
+  
         // Update the customerData state with the next customer ID
-        if (!snapshot.empty) {
-          const maxCustomerID = snapshot.docs[0].data().customerID;
+        if (!maxCustomerSnapshot.empty) {
+          const maxCustomerID = maxCustomerSnapshot.docs[0].data().customerID;
           setCustomerData((prevData) => ({
             ...prevData,
             customerID: maxCustomerID + 1,
@@ -49,13 +57,19 @@ const AddCustomerModal = ({ isOpen, onRequestClose, isMobileUnique, setIsMobileU
             customerID: 1,
           }));
         }
+  
+        // Fetch the customer count
+        const customerCountSnapshot = await db.collection('customers').get();
+        setCustomerCount(customerCountSnapshot.size);
       } catch (error) {
-        console.error('Error fetching max customer ID:', error.message);
+        console.error('Error fetching data:', error.message);
       }
     };
-    // Call the fetchMaxCustomerID function when the modal is opened
-    fetchMaxCustomerID();
+  
+    // Call the fetchData function when the modal is opened
+    fetchData();
   }, [isOpen]);
+  
 
 
   const validateInputs = () => {
@@ -125,7 +139,6 @@ const AddCustomerModal = ({ isOpen, onRequestClose, isMobileUnique, setIsMobileU
     } else {
       setStartDateError("");
     }
-
     return isValid;
   };
 
@@ -183,7 +196,12 @@ const AddCustomerModal = ({ isOpen, onRequestClose, isMobileUnique, setIsMobileU
 const handleSave = async () => {
   try {
     resetErrors();
-    if (!validateInputs()) {
+    if (!validateInputs() || customerCount >= 100) {
+      if(customerCount >=100){
+        onRequestClose();
+        onCustomerCount();
+      }
+
       return;
     }
     // Check if the mobile number is unique
@@ -231,7 +249,7 @@ const handleSave = async () => {
       <div className='add-customer-dialog'>
       <h2  className='add-customer-heading'>Add Customer</h2>
       <p className='customerID'>CustomerID: {customerData.customerID}</p>
-
+      <p className='total-customers'>Total Customers: {customerCount} / 100</p>
       <div className='container1'>
         <label className='all-label'>Name *
         <input className='inputbox1' placeholder='Name' type="text" name="name" value={customerData.name} onChange={handleInputChange} />

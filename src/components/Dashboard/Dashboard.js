@@ -11,7 +11,6 @@ import { CircularProgressbar } from "react-circular-progressbar";
 import CustomerBarChart from "../CustomerBarChart/CustomerBarChart";
 import CustomerSnackbar from "../shared/CustomerSnackbar";
 import ExportData from "../ExportCustomerData/ExportData";
-import LogoutOnClose from "../LogoutOnClose/LogoutOnClose";
 
 const CustomAlert = ({ message, onConfirm, onCancel }) => {
   const customStyles = {
@@ -128,6 +127,11 @@ const Dashboard = () => {
     setSnackbarMessage("Customer Added Successfully!");
     // Fetch customers after adding a new customer
     await fetchCustomers();
+  };
+
+  const handleCustomerCountSnackbar = async () => {
+    setShowSnackbar(true);
+    setSnackbarMessage("Customer limit exceeded!");
   };
 
   const handleDeleteSnackbar = () => {
@@ -281,7 +285,6 @@ const Dashboard = () => {
   // JSX for rendering the Dashboard component
   return (
     <div className="container">
-         <LogoutOnClose />
       <h1 className="heading">Welcome to Piles Clinic Dashboard</h1>
       <button
         className="logout-btn"
@@ -491,6 +494,7 @@ const Dashboard = () => {
         isMobileUnique={isMobileUnique}
         setIsMobileUnique={setIsMobileUnique}
         onCustomerAdded={handleAddSnackbar}
+        onCustomerCount = {handleCustomerCountSnackbar}
       />
       <EditCustomerModal
         isOpen={isEditCustomerModalOpen}

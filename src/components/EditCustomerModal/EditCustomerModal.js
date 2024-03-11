@@ -28,6 +28,11 @@ const EditCustomerModal = ({ isOpen, onRequestClose, initialData, isMobileUnique
   const [totalCostError, setTotalCostError] = useState("");
   const [startDateError, setStartDateError] = useState("");
 
+  useEffect(() => {
+    if (isOpen) {
+      resetErrors();
+    }
+  }, [isOpen]);
 
   useEffect(() => {
     setEditedData({ ...initialData });
@@ -229,11 +234,11 @@ const EditCustomerModal = ({ isOpen, onRequestClose, initialData, isMobileUnique
         <h2 className='edit-customer-heading'>Edit Customer</h2>
         <p className='customerID'>CustomerID: {editedData.customerID}</p>
         <div className='container1'>
-          <label className='all-label'>Name *
+          <label className='all-label1'>Name *
             <input className='inputbox1' placeholder='Name' type="text" name="name" value={editedData.name || ''} onChange={handleInputChange} />
             <div className="error-messages">{nameError}</div>
           </label>
-          <label className='all-label'>Mobile Number *
+          <label className='all-label1'>Mobile Number *
             <input className='inputbox1' placeholder='Mobile Number' type="text" name="mobile" value={editedData.mobile || ''} onChange={handleInputChange} />
             {isMobileUnique ? null : (
               <div style={{ color: 'red' }}>Mobile number must be unique</div>
@@ -243,32 +248,32 @@ const EditCustomerModal = ({ isOpen, onRequestClose, initialData, isMobileUnique
         </div>
 
         <div className='container1'>
-          <label className='all-label'>Place *
+          <label className='all-label1'>Place *
             <input className='inputbox1' placeholder='Place' type="text" name="place" value={editedData.place || ''} onChange={handleInputChange} />
             <div className="error-messages">{placeError}</div>  
           </label>
-          <label className='all-label'>Address *
+          <label className='all-label1'>Address *
             <input className='inputbox1' placeholder='Address' type="text" name="address" value={editedData.address || ''} onChange={handleInputChange} />
                {/* <div className="error-messages">{addressError}</div>   */}
           </label>
         </div>
 
         <div className='container1'>
-          <label className='all-label'>Age *
+          <label className='all-label1'>Age *
             <input className='inputbox1' placeholder='Age' type="text" name="age" value={editedData.age || ''} onChange={handleInputChange} />
             <div className="error-messages">{ageError}</div> 
           </label>
-          <label className='all-label'>Total Cost *
+          <label className='all-label1'>Total Cost *
             <input className='inputbox1' placeholder='Total Cost' type="text" name="totalCost" value={editedData.totalCost || ''} onChange={handleInputChange} />
             <div className="error-messages">{totalCostError}</div> 
           </label>
         </div>
         <div className='container1'>
-          <label className='all-label'>Start Date *
+          <label className='all-label1'>Start Date *
             <input className='inputbox1'type="date" name="startDate" value={editedData.startDate || ''} onChange={handleInputChange} />
             <div className="error-messages">{startDateError}</div> 
           </label>
-          <label className='all-label'>End Date *
+          <label className='all-label1'>End Date *
             <input className='inputbox1' type="date" name="endDate" value={editedData.endDate || ''} onChange={handleInputChange} />
           </label>
         </div>
