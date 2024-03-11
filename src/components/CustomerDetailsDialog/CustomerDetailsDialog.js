@@ -266,8 +266,8 @@ const CustomerDetailsDialog = ({ isOpen, onRequestClose, customerDetails }) => {
                                   }`}
                                   onClick={() =>
                                     !customerDetails.endDate &&
-                                    handleDeletePayment(index)
-                                  }
+                                    handleDeletePayment(index)}
+                                    title={customerDetails.endDate ? 'Cannot delete since, end date is entered.' : ''}
                                 >
                                   delete
                                 </span>

@@ -196,8 +196,8 @@ const AddCustomerModal = ({ isOpen, onRequestClose, isMobileUnique, setIsMobileU
 const handleSave = async () => {
   try {
     resetErrors();
-    if (!validateInputs() || customerCount >= 3) {
-      if(customerCount >=3){
+    if (!validateInputs() || customerCount >= 100) {
+      if(customerCount >=100){
         onRequestClose();
         onCustomerCount();
       }
@@ -249,7 +249,7 @@ const handleSave = async () => {
       <div className='add-customer-dialog'>
       <h2  className='add-customer-heading'>Add Customer</h2>
       <p className='customerID'>CustomerID: {customerData.customerID}</p>
-
+      <p className='total-customers'>Total Customers: {customerCount} / 100</p>
       <div className='container1'>
         <label className='all-label'>Name *
         <input className='inputbox1' placeholder='Name' type="text" name="name" value={customerData.name} onChange={handleInputChange} />
