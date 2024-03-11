@@ -261,8 +261,13 @@ const CustomerDetailsDialog = ({ isOpen, onRequestClose, customerDetails }) => {
                               </td>
                               <td>
                                 <span
-                                  className="material-icons delete-icon"
-                                  onClick={() => handleDeletePayment(index)}
+                                  className={`material-icons delete-icon${
+                                    customerDetails.endDate ? " disabled" : ""
+                                  }`}
+                                  onClick={() =>
+                                    !customerDetails.endDate &&
+                                    handleDeletePayment(index)
+                                  }
                                 >
                                   delete
                                 </span>
