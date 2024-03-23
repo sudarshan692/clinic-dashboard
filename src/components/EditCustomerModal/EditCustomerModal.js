@@ -252,7 +252,7 @@ const EditCustomerModal = ({ isOpen, onRequestClose, initialData, isMobileUnique
             <input className='inputbox1' placeholder='Place' type="text" name="place" value={editedData.place || ''} onChange={handleInputChange} />
             <div className="error-messages">{placeError}</div>  
           </label>
-          <label className='all-label1'>Address *
+          <label className='all-label1'>Address
             <input className='inputbox1' placeholder='Address' type="text" name="address" value={editedData.address || ''} onChange={handleInputChange} />
                {/* <div className="error-messages">{addressError}</div>   */}
           </label>
