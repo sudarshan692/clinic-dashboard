@@ -84,7 +84,7 @@ const CustomerTable = ({ data, onDelete, onEdit, onPaymentAdded }) => {
               <img
                 src={completedImage}
                 alt="Completed"
-                style={{ width: "20px", height: "20px", marginRight: "8px" }}
+                style={{marginRight: "8px",height: window.innerWidth < 768 ? '12px' : '20px', width: window.innerWidth < 768 ? '12px' : '20px' }}
               />
               <span style={{ display: "inline-block", verticalAlign: "middle" }}>
                 Completed
@@ -95,7 +95,7 @@ const CustomerTable = ({ data, onDelete, onEdit, onPaymentAdded }) => {
               <img
                 src={inProgressImage}
                 alt="In Progress"
-                style={{ width: "20px", height: "20px", marginRight: "8px" }}
+                style={{ height: window.innerWidth < 768 ? '12px' : '20px', width: window.innerWidth < 768 ? '12px' : '20px', marginRight: "8px" }}
               />
               <span style={{ display: "inline-block", verticalAlign: "middle" }}>
                 In Progress
@@ -110,14 +110,14 @@ const CustomerTable = ({ data, onDelete, onEdit, onPaymentAdded }) => {
         <>
           <span
             className="material-icons"
-            style={{ cursor: "pointer" }}
+            style={{ cursor: "pointer",fontSize: window.innerWidth < 768 ? '1rem' : '' }}
             onClick={() => onEdit(row)}
           >
             edit
           </span>
           <span
             className="material-icons"
-            style={{ cursor: "pointer", color: '#BE3144' }}
+            style={{ cursor: "pointer", color: '#BE3144',fontSize: window.innerWidth < 768 ? '1rem' : '' }}
             onClick={() => onDelete(row.uniqueID)}
     
           >
@@ -126,7 +126,7 @@ const CustomerTable = ({ data, onDelete, onEdit, onPaymentAdded }) => {
           
           <span
         className="material-icons add-payment-button"
-        style={{ cursor: "pointer", color: 'orange' }}
+        style={{ cursor: "pointer", color: 'orange', fontSize: window.innerWidth < 768 ? '1rem' : '' }}
         onClick={() => handleAddPaymentClick(row)}
       >
         add_circle_outline
@@ -141,7 +141,8 @@ const CustomerTable = ({ data, onDelete, onEdit, onPaymentAdded }) => {
       style: {
         backgroundColor: "#3f51b5", // Header background color
         color: "white", // Header text color
-        fontSize: "15px", // Header font size
+        minHeight: window.innerWidth < 768 ? '35px' : '50px', 
+        fontSize: window.innerWidth < 768 ? '0.5rem' : '0.94rem', // Header font size
         fontWeight: "bold", // Header font weight
       },
     },
@@ -156,18 +157,20 @@ const CustomerTable = ({ data, onDelete, onEdit, onPaymentAdded }) => {
       style: {
         "&:nth-child(odd)": {
           backgroundColor: "#0d2136",
-          color: 'white'
+          color: 'white',
+          fontSize: window.innerWidth < 768 ? '0.5rem' : '',
         },
         "&:nth-child(even)": {
           backgroundColor: '#162c46',
-          color: 'white'
+          color: 'white',
+          fontSize: window.innerWidth < 768 ? '0.5rem' : '',
         },
       },
     },
     pagination: {
       style: {
+        minHeight: window.innerWidth < 768 ? '' : '50px', 
         backgroundColor: '#3f51b5',
-        // backgroundColor: "#ecf0f1", 
         color: "white", // Pagination text color
         display: "flex",
         justifyContent: "center",
@@ -194,6 +197,7 @@ const CustomerTable = ({ data, onDelete, onEdit, onPaymentAdded }) => {
       </div>
       <div className="table">
         <DataTable
+          className="custom-data-table"
           columns={columns}
           data={filteredData}
           pagination
