@@ -83,7 +83,7 @@ const Login = () => {
           <LoadingSpinner />
         </div>
       )}
-      <h1 className="login-nav-heading">Welcome to Piles Clinic Application</h1>
+      <h1 className="login-nav-heading">Welcome to Clinic Application</h1>
       <div className="login-card">
         <h2 className="card-heading">Admin Login</h2>
         <div>
