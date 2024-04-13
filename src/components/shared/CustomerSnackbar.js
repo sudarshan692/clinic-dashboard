@@ -17,13 +17,14 @@ const CustomSnackbar = ({ message, duration, onClose }) => {
       style={{
         
         position: 'fixed',
+        width:  window.innerWidth < 768 ? "250px":"",
         bottom: window.innerWidth < 768 ? "15px": "20px",
         fontSize: window.innerWidth < 768 ? "11px": "15px",
         left: '50%',
         transform: 'translateX(-50%)',
         backgroundColor: '#333',
         color: 'rgb(211, 227, 253)',
-        padding: window.innerWidth < 768 ? "5px": "15px",
+        padding: window.innerWidth < 768 ? "10px": "15px",
         borderRadius: window.innerWidth < 768 ? "2px": "5px",
         boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
         opacity: visible ? 1 : 0,

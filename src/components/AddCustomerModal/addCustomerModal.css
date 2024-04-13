@@ -117,15 +117,17 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
   .container2 {
-      display: flex;
-      justify-content: space-between;
-      margin-top: 5px;
+    display: flex;
+    justify-content: space-between;
+    margin-left: 10px;
+    margin-right: 50px;
+    margin-top: 5px;
     }
     .container1 input[type="date"]::-webkit-calendar-picker-indicator {
       filter: invert(1);
       margin-left: 200px;
     }
-  .all-label1 {
+  .add-all-label {
       margin-top: 10px;
       color: rgb(211, 227, 253);
       font-size: 10px;
@@ -151,36 +153,46 @@
     font-size: 10px;
     border-radius: 2px;
   }
-  .right-bottom-button-cancel3 {
+  .add-cancel-button{
+    width: 50px;
+    font-size: 10px;
+    margin-right: 80px;
+    margin-top: 425px;
+    background-color: #3f51b5;
+    padding: 5px;
+    border: 0;
+    border-radius: 2px;
+    color: white;
+    }
+    .add-save-button {
       width: 50px;
       font-size: 10px;
+      margin: 10px;
+      margin-right: 20px;
+      margin-top: 425px;
       background-color: #3f51b5;
       padding: 5px;
       border: 0;
       border-radius: 2px;
       color: white;
-    }
-    .right-bottom-button-save3 {
-        width: 50px;
-        font-size: 10px;
-        margin: 10px;
-        background-color: #3f51b5;
-        padding: 5px;
-        border: 0;
-        border-radius: 2px;
-        color: white;
       }
-  .edit-error-messages{
+  .add-error-messages{
     color: red;
     font-size: 10px;
   
   }
-  .edit-error-messages-bottom{
+  .add-error-messages-bottom{
     position: absolute;
     bottom: 0;
     margin-left: 25%;
     margin-bottom: 40px;
     color: red;
+    font-size: 10px;
+  }
+  .total-customers{
+    color:rgb(211, 227, 253);
+    margin-top: 0px;
+    margin-left: 10px;
     font-size: 10px;
   }
 }
