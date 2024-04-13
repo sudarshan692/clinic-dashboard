@@ -76,6 +76,7 @@
 .login-validation-message {
   color: red;
   margin-bottom: 10px;
+  font-size: 13px;
 }
 
 @media only screen and (max-width: 768px) {

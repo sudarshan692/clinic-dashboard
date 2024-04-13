@@ -69,8 +69,8 @@ const AddPaymentModal = ({ isOpen, onRequestClose, selectedCustomer, onPaymentAd
 
   const customStyles = {
     content: {
-      width: '500px',
-      height: '300px',
+      width: window.innerWidth < 768 ? "300px": "500px",
+      height: window.innerWidth < 768 ? "180px": "300px",
       margin: 'auto',
       padding: '0',
       overflow: 'auto',
@@ -102,17 +102,17 @@ const AddPaymentModal = ({ isOpen, onRequestClose, selectedCustomer, onPaymentAd
       style={customStyles}
     >
       <div className='maincard'>
-        <h2 className='edit-customer-heading'>Add Payment</h2>
+        <h2 className='edit-customer-heading2'>Add Payment</h2>
         <div className='container1'>
           <label className='all-label'> Payment Amount:
             <input className='payment-input' type="text" value={paymentAmount} onChange={handleInputChange}  disabled={selectedCustomer.endDate !== ''} />
           </label>
           <div>
-            <button className="right-bottom-button-cancel" onClick={onRequestClose}>Cancel</button>
+            <button className="right-bottom-button-cancel2" onClick={onRequestClose}>Cancel</button>
           </div>
           <div>
             <button
-              className="right-bottom-button-save"
+              className="right-bottom-button-save2"
               onClick={handleSave}
               disabled={selectedCustomer.endDate !== '' || !!errorMessage || isSaving} // Disable if already saving or if there's an error
             >

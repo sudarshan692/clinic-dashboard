@@ -15,14 +15,16 @@ const CustomSnackbar = ({ message, duration, onClose }) => {
   return (
     <div
       style={{
+        
         position: 'fixed',
-        bottom: '20px',
+        bottom: window.innerWidth < 768 ? "15px": "20px",
+        fontSize: window.innerWidth < 768 ? "11px": "15px",
         left: '50%',
         transform: 'translateX(-50%)',
         backgroundColor: '#333',
         color: 'rgb(211, 227, 253)',
-        padding: '15px',
-        borderRadius: '5px',
+        padding: window.innerWidth < 768 ? "5px": "15px",
+        borderRadius: window.innerWidth < 768 ? "2px": "5px",
         boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
         opacity: visible ? 1 : 0,
         transition: 'opacity 0.3s ease-in-out',

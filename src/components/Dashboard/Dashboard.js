@@ -15,11 +15,11 @@ import ExportData from "../ExportCustomerData/ExportData";
 const CustomAlert = ({ message, onConfirm, onCancel }) => {
   const customStyles = {
     content: {
-      width: "400px",
-      height: "150px",
+      width: window.innerWidth < 768 ? "250px": "400px",
+      height: window.innerWidth < 768 ? "75px": "150px",
       margin: "auto",
       padding: "15px",
-      borderRadius: "10px",
+      borderRadius: "5px",
       border: "10px",
       backgroundColor: "#0d2136",
       color: "white",
@@ -29,7 +29,7 @@ const CustomAlert = ({ message, onConfirm, onCancel }) => {
     <Modal isOpen={true} contentLabel="Custom Alert" style={customStyles}>
       <div>
         <h2 className="alert-heading">Confirm delete</h2>
-        <p>{message}</p>
+        <p className="alert-text">{message}</p>
         <button className="confirm-alert-button" onClick={onConfirm}>
           Confirm
         </button>
@@ -284,8 +284,8 @@ const Dashboard = () => {
 
   // JSX for rendering the Dashboard component
   return (
-    <div className="container">
-      <h1 className="heading">Welcome to Piles Clinic Dashboard</h1>
+    <div className="dashboard-page">
+      <h1 className="dashboard-nav-heading">Welcome to Clinic Dashboard</h1>
       <button
         className="logout-btn"
         onClick={handleLogout}
@@ -325,7 +325,7 @@ const Dashboard = () => {
         />
       )}
 
-      <div className="progress-bar-container1">
+      <div className="in-progress-dashboard-container">
         <CircularProgressbar
           className="circle"
           value={calculatePercentage(inProgressCount, totalCustomers)}
@@ -358,7 +358,7 @@ const Dashboard = () => {
         </div>
       </div>
 
-      <div className="progress-bar-container2">
+      <div className="completed-dashboard-container">
         <CircularProgressbar
           className="circle"
           value={calculatePercentage(completedCount, totalCustomers)}

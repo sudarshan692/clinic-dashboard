@@ -54,6 +54,7 @@ strong {
     border: 0;
     border-radius: 6px;
     color: white;
+    cursor: pointer;
 }
 .progress-bar-container4 {
   background-color: #162c46;
