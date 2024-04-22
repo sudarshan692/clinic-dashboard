@@ -111,21 +111,23 @@
 }
 
 .confirm-alert-button {
-  margin-top: 40px;
-  margin-left: 270px;
+  margin-top: 35px;
+  margin-left: 250px;
   margin-right: 15px;
   background-color: #3f51b5;
-  padding: 5px;
+  padding: 10px;
   color: rgb(211, 227, 253);
   border: 0;
   border-radius: 4px;
+  cursor: pointer;
 }
 .cancel-alert-button {
-  padding: 5px;
+  padding: 10px;
   background-color: #3f51b5;
   color: rgb(211, 227, 253);
   border: 0;
   border-radius: 4px;
+  cursor: pointer;
 }
 .alert-heading{
   margin-top: -5px;

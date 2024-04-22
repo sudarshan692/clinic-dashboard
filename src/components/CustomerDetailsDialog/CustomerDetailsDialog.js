@@ -89,7 +89,7 @@ const CustomerDetailsDialog = ({ isOpen, onRequestClose, customerDetails }) => {
 
   const customStyles = {
     content: {
-      width: window.innerWidth < 768 ? "auto" : "1100px",
+      width: window.innerWidth < 768 ? "auto" : "800px",
       height: window.innerWidth < 768 ? "auto" : "600px",
       margin: window.innerWidth < 768 ? "5px" : "auto",
       marginBottom: window.innerWidth < 768 ? "230px" : "auto",
