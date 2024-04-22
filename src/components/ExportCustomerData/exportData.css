@@ -19,9 +19,11 @@
   @media only screen and (max-width: 600px) {
     .export-data-btn{
       position: fixed;
-      top: 85px;
-      right: 322px;
+      top: 186px;
+      right: 323px;
       padding: 7px;
+      margin-left: -20px;
+      margin-right: -10px;
       border-width: 0px;
       border-radius: 2px;
       color: rgb(211, 227, 253);

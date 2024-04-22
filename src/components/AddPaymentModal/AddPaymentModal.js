@@ -7,12 +7,11 @@ const AddPaymentModal = ({ isOpen, onRequestClose, selectedCustomer, onPaymentAd
   const [paymentAmount, setPaymentAmount] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isSaving, setIsSaving] = useState(false); // Add state to track saving state
 
   useEffect(() => {
-    // Update the isModalOpen state when the modal is opened or closed
     setIsModalOpen(isOpen);
 
-    // Reset the error message when the modal is closed
     if (!isOpen) {
       setPaymentAmount('');
       setErrorMessage('');
@@ -21,11 +20,14 @@ const AddPaymentModal = ({ isOpen, onRequestClose, selectedCustomer, onPaymentAd
 
   const handleInputChange = (e) => {
     setPaymentAmount(e.target.value);
-    setErrorMessage(''); // Clear error message when the user types
+    setErrorMessage('');
   };
 
   const handleSave = async () => {
+    if (isSaving) return; // Do nothing if already saving
+
     try {
+      setIsSaving(true); // Set saving state to true
       if (!paymentAmount || !selectedCustomer) {
         setErrorMessage('Payment amount is required.');
         return;
@@ -47,38 +49,34 @@ const AddPaymentModal = ({ isOpen, onRequestClose, selectedCustomer, onPaymentAd
         return;
       }
 
-      // Update the 'payments' array in the customer document
       await db.collection('customers').doc(String(selectedCustomer.customerID)).update({
         payments: firebase.firestore.FieldValue.arrayUnion({
           amount: parsedAmount,
-          date: new Date().toLocaleDateString('en-IN'), // Indian date format
-          time: new Date().toLocaleTimeString('en-IN'), // Indian time format
+          date: new Date().toLocaleDateString('en-IN'),
+          time: new Date().toLocaleTimeString('en-IN'),
         }),
       });
 
-      // Clear payment input box after successful save
       setPaymentAmount('');
-      // Notify the parent component that a payment has been added
       onPaymentAdded();
-      // Close the modal after successful save
       onRequestClose();
     } catch (error) {
       console.error('Error saving payment:', error.message);
+    } finally {
+      setIsSaving(false); // Reset saving state regardless of success or failure
     }
   };
 
-  // Custom styles for the modal
   const customStyles = {
     content: {
-      width: '500px', // Set your custom width here
-      height: '300px', // Set your custom height here
-      margin: 'auto', // Center the modal
+      width: window.innerWidth < 768 ? "300px": "500px",
+      height: window.innerWidth < 768 ? "180px": "300px",
+      margin: 'auto',
       padding: '0',
-      overflow: 'auto', // Allow scrolling if content overflows
+      overflow: 'auto',
     },
   };
 
-  // If selectedCustomer is null, return an empty modal or handle it accordingly
   if (!selectedCustomer) {
     return (
       <Modal
@@ -97,7 +95,6 @@ const AddPaymentModal = ({ isOpen, onRequestClose, selectedCustomer, onPaymentAd
       isOpen={isModalOpen}
       onRequestClose={() => {
         onRequestClose();
-        // Additional cleanup if needed
         setPaymentAmount('');
         setErrorMessage('');
       }}
@@ -105,21 +102,21 @@ const AddPaymentModal = ({ isOpen, onRequestClose, selectedCustomer, onPaymentAd
       style={customStyles}
     >
       <div className='maincard'>
-        <h2 className='edit-customer-heading'>Add Payment</h2>
+        <h2 className='edit-customer-heading2'>Add Payment</h2>
         <div className='container1'>
           <label className='all-label'> Payment Amount:
             <input className='payment-input' type="text" value={paymentAmount} onChange={handleInputChange}  disabled={selectedCustomer.endDate !== ''} />
           </label>
           <div>
-            <button className="right-bottom-button-cancel" onClick={onRequestClose}>Cancel</button>
+            <button className="right-bottom-button-cancel2" onClick={onRequestClose}>Cancel</button>
           </div>
           <div>
             <button
-              className="right-bottom-button-save"
+              className="right-bottom-button-save2"
               onClick={handleSave}
-              disabled={selectedCustomer.endDate !== '' || !!errorMessage} // Disable if endDate is not an empty string or if there is an error message
+              disabled={selectedCustomer.endDate !== '' || !!errorMessage || isSaving} // Disable if already saving or if there's an error
             >
-              Save
+              {isSaving ? 'Saving...' : 'Save'} {/* Change button text based on saving state */}
             </button>
           </div>
         </div>

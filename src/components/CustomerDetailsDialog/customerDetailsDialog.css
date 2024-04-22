@@ -1,4 +1,4 @@
-.customer-details {
+.customer-details-heading {
   position: fixed;
   width: 780px;
   margin-top: 0px;
@@ -52,8 +52,9 @@ strong {
     background-color: #3f51b5;
     padding: 10px;
     border: 0;
-    border-radius: 6px;
+    border-radius: 4px;
     color: white;
+    cursor: pointer;
 }
 .progress-bar-container4 {
   background-color: #162c46;
@@ -167,4 +168,10 @@ th {
   color: #BE3144; 
   cursor: not-allowed;
   opacity: 0.6;
+}
+
+
+@media only screen and (max-width: 768px) {
+  
+
 }

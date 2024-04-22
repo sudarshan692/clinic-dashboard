@@ -110,6 +110,10 @@ const EditPaymentModal = ({ isOpen, onRequestClose, selectedCustomer, selectedPa
               className="right-bottom-button-save"
               onClick={handleUpdate}
               disabled={selectedCustomer.endDate !== '' || !!errorMessage}
+              style={{
+                cursor: (selectedCustomer.endDate !== '' || !!errorMessage) ? "not-allowed" : "pointer",
+                opacity: (selectedCustomer.endDate !== '' || !!errorMessage) ? 0.5 : 1,
+              }}
             >
               Update
             </button>

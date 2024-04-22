@@ -83,11 +83,11 @@ const Login = () => {
           <LoadingSpinner />
         </div>
       )}
-      <h1 className="heading">Welcome to Piles Clinic Application</h1>
+      <h1 className="login-nav-heading">Welcome to Clinic Application</h1>
       <div className="login-card">
         <h2 className="card-heading">Admin Login</h2>
         <div>
-          <label className="login-label">Email *</label>
+          <label className="login-labels">Email *</label>
           <input
             placeholder="abc@gmail.com"
             className="login-inputboxes"
@@ -95,10 +95,10 @@ const Login = () => {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
-          <div className="error-message">{emailError}</div>
+          <div className="login-validation-message">{emailError}</div>
         </div>
         <div>
-          <label className="login-label">Password *</label>
+          <label className="login-labels">Password *</label>
           <input
             placeholder="Password"
             className="login-inputboxes"
@@ -106,7 +106,7 @@ const Login = () => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-          <div className="error-message">{passwordError}</div>
+          <div className="login-validation-message">{passwordError}</div>
         </div>
         <button
           className="login-button"

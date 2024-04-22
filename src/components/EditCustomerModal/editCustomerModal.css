@@ -63,15 +63,16 @@
     position: absolute;
     bottom: 0;
     right: 0;
-    margin-right: 150px;
+    margin-right: 130px;
     margin-bottom: 10px;
     background-color: #3f51b5;
     padding: 10px;
     border: 0;
     border-radius: 6px;
     color: white;
+    cursor: pointer;
   }
-  .right-bottom-button-save {
+  .right-bottom-button-save{
       width: 100px;
       position: absolute;
       bottom: 0;
@@ -82,11 +83,109 @@
       border: 0;
       border-radius: 6px;
       color: white;
+      cursor: pointer;
     }
-.error-message1{
-  margin-top: 60px;
+.edit-error-messages{
   color: red;
+  font-size: 15px;
+}
+.edit-error-messages-bottom{
   display: flex;
   justify-content: center;
+  margin-top: 45px;
+  color: red;
+  font-size: 15px;
+}
+
+@media only screen and (max-width: 768px) {
+
+  .inputbox1 {
+    margin-top: 5px;
+    margin-right: 10px;
+    display: flex;
+    justify-content: center;
+    font-size: 10px;
+    height: 20px;
+    padding: 5px;
+    border-radius: 2px;
+    width: 154px;
+    background: rgb(3, 21, 37);
+    border-width: 0px;
+    border-color: #092635;
+    color: rgb(211, 227, 253);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  .container1 {
+      display: flex;
+      justify-content: space-between;
+      margin-left: 10px;
+      margin-right: 50px;
+      margin-top: 5px;
+    }
+    .container1 input[type="date"]::-webkit-calendar-picker-indicator {
+      filter: invert(1);
+      margin-left: 200px;
+    }
+  .all-label1 {
+      margin-top: 10px;
+      color: rgb(211, 227, 253);
+      font-size: 10px;
+    } 
+  .edit-customer-heading{
+    font-size: 15px;
+    margin-top: 0px;
+    color: rgb(211, 227, 253);
+    display: flex;
+    justify-content: center;
+    padding: 10px;
+    background-color: #3f51b5;
+  }
+  .customerID {
+    width: 85px;
+    color: rgb(211, 227, 253);
+    margin-top: -44px;
+    margin-left: 5px;
+    border: 1px solid rgb(211, 227, 253);
+    box-sizing: border-box;
+    margin-right: 1000px;
+    padding: 5px;
+    font-size: 10px;
+    border-radius: 2px;
+  }
+  .right-bottom-button-cancel {
+      width: 50px;
+      font-size: 10px;
+      margin-right: 70px;
+      margin-top: -10px;
+      background-color: #3f51b5;
+      padding: 5px;
+      border: 0;
+      border-radius: 2px;
+      color: white;
+    }
+    .right-bottom-button-save {
+        width: 50px;
+        font-size: 10px;
+        margin: 10px;
+        background-color: #3f51b5;
+        padding: 5px;
+        border: 0;
+        border-radius: 2px;
+        color: white;
+      }
+  .edit-error-messages{
+    color: red;
+    font-size: 10px;
+  
+  }
+  .edit-error-messages-bottom{
+    position: absolute;
+    bottom: 0;
+    margin-left: 25%;
+    margin-bottom: 40px;
+    color: red;
+    font-size: 10px;
+  }
 
 }
+
