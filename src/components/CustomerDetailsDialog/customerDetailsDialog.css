@@ -1,4 +1,4 @@
-.customer-details {
+.customer-details-heading {
   position: fixed;
   width: 780px;
   margin-top: 0px;
@@ -168,4 +168,10 @@ th {
   color: #BE3144; 
   cursor: not-allowed;
   opacity: 0.6;
+}
+
+
+@media only screen and (max-width: 768px) {
+  
+
 }

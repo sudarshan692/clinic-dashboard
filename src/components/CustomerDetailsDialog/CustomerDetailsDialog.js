@@ -89,10 +89,14 @@ const CustomerDetailsDialog = ({ isOpen, onRequestClose, customerDetails }) => {
 
   const customStyles = {
     content: {
-      width: "800px",
-      height: "550px",
-      margin: "auto",
-      padding: "0px",
+      width: window.innerWidth < 768 ? "auto" : "1100px",
+      height: window.innerWidth < 768 ? "auto" : "600px",
+      margin: window.innerWidth < 768 ? "5px" : "auto",
+      marginBottom: window.innerWidth < 768 ? "230px" : "auto",
+      marginLeft: window.innerWidth < 768 ? "-30px" : "auto",
+      marginRight: window.innerWidth < 768 ? "-30px" : "auto",
+      padding: "0",
+      overflow: "auto",
     },
   };
 
@@ -104,7 +108,7 @@ const CustomerDetailsDialog = ({ isOpen, onRequestClose, customerDetails }) => {
       onRequestClose={onRequestClose}
     >
       <div className="maincard">
-        <h2 className="customer-details">Customer Details</h2>
+        <h2 className="customer-details-heading">Customer Details</h2>
         <div className="details">
           {customerDetails && (
             <div>
