@@ -89,7 +89,7 @@ const CustomerDetailsDialog = ({ isOpen, onRequestClose, customerDetails }) => {
 
   const customStyles = {
     content: {
-      width: window.innerWidth < 768 ? "auto" : "800px",
+      width: window.innerWidth < 768 ? "auto" : "802px",
       height: window.innerWidth < 768 ? "auto" : "600px",
       margin: window.innerWidth < 768 ? "5px" : "auto",
       marginBottom: window.innerWidth < 768 ? "230px" : "auto",
@@ -281,7 +281,7 @@ const CustomerDetailsDialog = ({ isOpen, onRequestClose, customerDetails }) => {
                       </tbody>
                     </table>
                   ) : (
-                    <p>No payments available</p>
+                    <p className="no-paymentData">No payments available</p>
                   )}
                 </ul>
               </div>
