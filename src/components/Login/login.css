@@ -1,5 +1,20 @@
+.login-nav-heading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgb(211, 227, 253);
+  font-size: 1.8em;
+  margin-top: 0;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  background-color: #3f51b5;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.5);
+  font-family: "Poppins", sans-serif;
+  font-weight: 300;
+  font-style: normal;
+}
 .login-card {
-  border-radius: 20px;
+  border-radius: 15px;
   background-color: #0d2136;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   display: flex;
@@ -23,7 +38,7 @@
   font-style: normal;
   font-size: 1.6em;
 }
-.login-label {
+.login-labels {
   color: rgb(211, 227, 253);
 }
 .login-inputboxes {
@@ -43,76 +58,90 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 .login-button {
-    margin-top: 25px;
-    margin-bottom: 60px;
-    font-size: 15px;
-    display: flex;
-    width: 420px; /* Set the width to match the input boxes */
-    justify-content: center;
-    padding: 15px;
-    border-width: 0px;
-    border-radius: 6px;
-    color: rgb(211, 227, 253);
-    background-color: #3f51b5;
-    cursor: pointer;
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
-    transition: background-color 0.3s ease;
-  }
-.error-message{
+  margin-top: 25px;
+  margin-bottom: 60px;
+  font-size: 15px;
+  display: flex;
+  width: 420px; /* Set the width to match the input boxes */
+  justify-content: center;
+  padding: 15px;
+  border-width: 0px;
+  border-radius: 6px;
+  color: rgb(211, 227, 253);
+  background-color: #3f51b5;
+  cursor: pointer;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease;
+}
+.login-validation-message {
   color: red;
   margin-bottom: 10px;
-}  
+  font-size: 13px;
+}
 
-@media only screen and (max-width: 600px) {
-  .login-card {
-    margin-top: 40%;
-    margin-left: 10%;
-    margin-right: 10%;
-  }
-  .login-inputboxes{
-    width: 200%;
-    padding: 1px;
-    padding-left: 8px;
-    font-size: 0.7em;
-    margin-left: -60px;
-  }
-  .login-button {
-    width: 50%;
-    display: flex;
-    justify-content: center;
-  }
-  .card-heading {
-    margin-bottom: 20px;
-    font-size: 1em;
-  }
-  .login-label {
-    font-size: 0.7em;
-    margin-left: -60px;
-  }
-  .login-button {
-    font-size: 0.7em;
-    padding: 10px;
-    margin-top: 15px;
-    margin-bottom: 30px;
-  }
-  .error-message{
-    color: red;
-    margin-bottom: 10px;
-    font-size: 0.7em;
-    margin-left: -60px;
-  }  
-  .heading {
+@media only screen and (max-width: 768px) {
+  .login-nav-heading {
     display: flex;
     align-items: center;
     justify-content: center;
-    color: rgb(211, 227, 253);;
+    color: rgb(211, 227, 253);
     font-size: 1.1em;
     margin-top: 0;
-    padding-bottom: 8px;
+    padding-top: 2px;
     background-color: #3f51b5;
     box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.5);
     font-family: "Poppins", sans-serif;
     font-weight: 300;
-    font-style: normal;padding-bottom: 0px;
+    font-style: normal;
+    padding-bottom: 2px;
+  }
+  .login-card {
+    border-radius: 10px;
+    margin-top: 40%;
+    margin-left: 10%;
+    margin-right: 10%;
+  }
+  .login-inputboxes {
+    display: flex;
+    flex-direction: column;
+    font-size: 0.7em;
+    height: 30px;
+    padding: 1px;
+    padding-left: 8px;
+    margin-left: 0px;
+    border-radius: 3px;
+    width: 230px;
+    background: rgb(3, 21, 37);
+    border-width: 0px;
+    border-color: #092635;
+    color: rgb(211, 227, 253);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  .login-button {
+    border-radius: 3px;
+    width: 238px;
+    display: flex;
+    justify-content: center;
+  }
+  .card-heading {
+    margin-bottom: 40px;
+    font-size: 1em;
+  }
+  .login-labels {
+    font-size: 0.7em;
+    margin-left: 0px;
+  }
+  .login-button {
+    font-size: 0.7em;
+    padding: 10px;
+    margin-top: 20px;
+    margin-bottom: 30px;
+  }
+  .login-validation-message {
+    color: red;
+    margin-bottom: 5px;
+    font-size: 0.7em;
+    margin-left: 0px;
+    margin-top: -5px;
   }
 }
