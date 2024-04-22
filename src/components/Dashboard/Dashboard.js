@@ -30,12 +30,13 @@ const CustomAlert = ({ message, onConfirm, onCancel }) => {
       <div>
         <h2 className="alert-heading">Confirm delete</h2>
         <p className="alert-text">{message}</p>
-        <button className="confirm-alert-button" onClick={onConfirm}>
-          Confirm
-        </button>
         <button className="cancel-alert-button" onClick={onCancel}>
           Cancel
         </button>
+        <button className="confirm-alert-button" onClick={onConfirm}>
+          Confirm
+        </button>
+
       </div>
     </Modal>
   );
